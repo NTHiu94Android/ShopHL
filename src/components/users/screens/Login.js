@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput } from 'react-native'
 import React, { useContext } from 'react'
 
 import { UserContext } from '../UserContext';
@@ -30,11 +30,11 @@ const Login = (props) => {
 
         <Text style={{ top: 30, left: 150, color: 'black', fontWeight: '600' }} >Forgot Password</Text>
 
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity style={styles.btn} onPress={() => getUser()}>
           <Text style={{ color: '#ffffff', textAlign: 'center', top: 15, fontWeight: 'bold' }} >Log In</Text>
         </TouchableOpacity>
 
-        <Text style={{ top: 130, left: 175, color: 'black', fontWeight: '600' }} onPress={() => getUser()} >SIGN UP</Text>
+        <Text style={{ top: 130, left: 175, color: 'black', fontWeight: '600' }} onPress={() => navigation.navigate('Register')} >SIGN UP</Text>
       </View>
     </View>
   )

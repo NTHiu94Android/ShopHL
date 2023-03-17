@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'react-native'
 import React from 'react'
 
-const Register = () => {
+const Register = (props) => {
+  const { navigation } = props;
   return (
     <View style={{ bottom: 60 }}>
       <View style={{ width: 300, height: 300, flexDirection: 'row', alignItems: 'center', left: 50 }}>
@@ -31,7 +32,9 @@ const Register = () => {
           <Text style={{ color: '#ffffff', textAlign: 'center', top: 15, fontWeight: 'bold' }} >SIGN UP</Text>
         </TouchableOpacity>
 
-        <Text style={{ top: 140, left: 120, color: 'black', fontWeight: '600' }} >Already have account? SIGN IN</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text style={{ top: 140, left: 120, color: 'black', fontWeight: '600' }} >Already have account? SIGN IN</Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
