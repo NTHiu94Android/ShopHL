@@ -14,7 +14,7 @@ const Login = (props) => {
     <View>
       <View style={{ width: 300, height: 300, flexDirection: 'row', alignItems: 'center', left: 50 }}>
         <View style={{ height: 1, backgroundColor: 'black', flex: 1 }}></View>
-        <Image style={{ width: 50, height: 50, padding: 10 }} source={require('../Img/logo.png')}></Image>
+        <Image style={{ width: 50, height: 50, padding: 10 }} source={require('../../../assets/images/logo.png')}></Image>
         <View style={{ height: 1, backgroundColor: 'black', flex: 1 }}></View>
       </View>
       <View>
