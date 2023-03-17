@@ -48,7 +48,7 @@ const BottomNavigation = () => {
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
 
-                tabBarActiveTintColor: '#aeea00',
+                tabBarActiveTintColor: 'black',
                 tabBarInactiveTintColor: 'gray',
             })}>
 
