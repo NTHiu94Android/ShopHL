@@ -48,7 +48,7 @@ const Profile = (props) => {
                 <Text style={styles.textName}>Shipping Addresses</Text>
                 <Text style={styles.textStatus}>03 Addresses</Text>
               </View>
-              <TouchableOpacity onPress={() => navigation.navigate('Review')}>
+              <TouchableOpacity onPress={() => navigation.navigate('Shipping')}>
                 <Image
                   style={styles.iconTopBar}
                   resizeMode='cover'
@@ -96,7 +96,7 @@ const Profile = (props) => {
                 <Text style={styles.textName}>Setting</Text>
                 <Text style={styles.textStatus}>Notification, Password, FAQ, Contact</Text>
               </View>
-              <TouchableOpacity onPress={() => navigation.navigate('Order')}>
+              <TouchableOpacity onPress={() => navigation.navigate('Setting')}>
                 <Image
                   style={styles.iconTopBar}
                   resizeMode='cover'

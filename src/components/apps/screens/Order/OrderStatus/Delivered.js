@@ -43,19 +43,20 @@ const Item = ({ item, onpress }) => (
       </View>
     </View>
     <View style={[styles.rowItem, { marginTop: 16 }]}>
-      <TouchableOpacity style={styles.buttonDetail}>
+      <TouchableOpacity onPress={onpress} style={styles.buttonDetail}>
         <Text style={styles.textDetail}>Detail</Text>
       </TouchableOpacity>
       <Text style={{ fontSize: 16, fontWeight: '600', color: '#27AE60' }}>{item.status}</Text>
     </View>
   </View>
 );
-const Delivered = () => {
+const Delivered = (props) => {
+  const { navigation } = props;
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.container}>
         {
-          data.map((item) => <Item key={item._id} item={item} />)
+          data.map((item) => <Item key={item._id} item={item} onpress={() => navigation.navigate('Delivered')} />)
         }
       </View>
     </ScrollView>
