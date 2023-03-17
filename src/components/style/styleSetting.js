@@ -149,7 +149,7 @@ const styleSetting = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#CACCCE',
-
+    paddingTop: 50,
   },
 })
 export default styleSetting

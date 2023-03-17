@@ -128,6 +128,7 @@ const styleAddShippingAddress = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: 'white',
+      paddingTop: 50,
     },
 })
 export default styleAddShippingAddress

@@ -1,16 +1,20 @@
-import { Button, Pressable, StyleSheet, Text, View, Image } from 'react-native'
+import { Button, Pressable, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import styleAddShippingAddress from '../../../style/styleAddShippingAddress'
 
-const Shipping = () => {
+const Shipping = (props) => {
+  const { navigation } = props;
   return (
     <View style={styleAddShippingAddress.container}>
       <View style={styleAddShippingAddress.header}>
         <View style={styleAddShippingAddress.viewHeader}>
-          <Image
-            style={styleAddShippingAddress.icBack}
-            source={require('../../../../assets/images/back.png')}
-            resizeMode="cover"></Image>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image
+              style={styleAddShippingAddress.icBack}
+              source={require('../../../../assets/images/back.png')}
+              resizeMode="cover"></Image>
+          </TouchableOpacity>
+
           <Text style={styleAddShippingAddress.txtOrderDetail}>Add shipping address</Text>
         </View>
       </View>

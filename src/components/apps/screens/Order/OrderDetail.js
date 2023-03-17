@@ -1,16 +1,19 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import styleOrderDetail from '../../../style/styleOrderDetail';
 
-const OrderDetail = () => {
+const OrderDetail = (props) => {
+    const { navigation } = props;
     return (
         <View style={styleOrderDetail.container}>
             <View style={styleOrderDetail.header}>
                 <View style={styleOrderDetail.viewHeader}>
-                    <Image
-                        style={styleOrderDetail.icBack}
-                        source={require('../../../../assets/images/back.png')}
-                        resizeMode="cover"></Image>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Image
+                            style={styleOrderDetail.icBack}
+                            source={require('../../../../assets/images/back.png')}
+                            resizeMode="cover"></Image>
+                    </TouchableOpacity>
                     <Text style={styleOrderDetail.txtOrderDetail}>Order Detail</Text>
                 </View>
             </View>

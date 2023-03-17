@@ -56,7 +56,7 @@ const Delivered = (props) => {
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.container}>
         {
-          data.map((item) => <Item key={item._id} item={item} onpress={() => navigation.navigate('Delivered')} />)
+          data.map((item) => <Item key={item._id} item={item} onpress={() => navigation.navigate('OrderDetail')} />)
         }
       </View>
     </ScrollView>

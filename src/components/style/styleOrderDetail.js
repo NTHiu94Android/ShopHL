@@ -174,7 +174,8 @@ const styleOrderDetail = StyleSheet.create({
    */
   container: {
     flex: 1,
-    backgroundColor: '#E8E8E8'
+    backgroundColor: '#E8E8E8',
+    paddingTop: 50,
   },
 })
 

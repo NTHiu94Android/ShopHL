@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 
 import styleSetting from '../../../style/styleSetting';
 
-const Setting = () => {
+const Setting = (props) => {
+  const { navigation } = props;
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
@@ -11,10 +12,12 @@ const Setting = () => {
     <View style={styleSetting.container}>
       <View style={styleSetting.header}>
         <View style={styleSetting.viewHeader}>
-          <Image
-            style={styleSetting.icBack}
-            source={require('../../../../assets/images/back.png')}
-            resizeMode="cover"></Image>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image
+              style={styleSetting.icBack}
+              source={require('../../../../assets/images/back.png')}
+              resizeMode="cover"></Image>
+          </TouchableOpacity>
           <Text style={styleSetting.txtOrderDetail}>Setting</Text>
         </View>
         <View style={styleSetting.viewPersonalInformation}>
