@@ -10,17 +10,20 @@ const SplashScreen = (props) => {
         setTimeout(nextScreen, 1500);
     }, []);
     return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text>SplashScreen</Text>
+        <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text>SplashScreen</Text>
+            </View>
+
+            <View>
+                <Image style={styles.img} source={require('../../assets/images/logo.png')}></Image>
+                <Text style={styles.text} >Hoang Long</Text>
+                <Text style={styles.text} >Mobile</Text>
+                <TouchableOpacity style={styles.btn}>
+                    <Text style={{ color: '#ffffff', textAlign: 'center', top: 15, fontWeight: 'bold' }}>Get Started</Text>
+                </TouchableOpacity>
+            </View >
         </View>
-        <View>
-            <Image style={styles.img} source={require('../../assets/images/logo.png')}></Image>
-            <Text style={styles.text} >Hoang Long</Text>
-            <Text style={styles.text} >Mobile</Text>
-            <TouchableOpacity style={styles.btn}>
-                <Text style={{ color: '#ffffff', textAlign: 'center', top: 15, fontWeight: 'bold' }}>Get Started</Text>
-            </TouchableOpacity>
-        </View >
     )
 }
 
