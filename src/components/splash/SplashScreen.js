@@ -10,7 +10,7 @@ const SplashScreen = (props) => {
         setTimeout(nextScreen, 1500);
     }, []);
     return (
-        <View>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <Text>SplashScreen</Text>
         </View>
     )
