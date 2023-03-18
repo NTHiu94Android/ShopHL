@@ -1,4 +1,4 @@
-import { Button, FlatList, Image, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { Entypo, AntDesign } from '@expo/vector-icons';
 
@@ -10,6 +10,7 @@ const Cart = (props) => {
       <SafeAreaView style={styles.container}>
         <FlatList
           data={DATA}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) =>
             <Item
               prodName={item.prodName}

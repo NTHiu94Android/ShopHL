@@ -5,11 +5,13 @@ import Delivered from './OrderStatus/Delivered';
 import Canceled from './OrderStatus/Canceled';
 import Processing from './OrderStatus/Processing';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import back from '../../../backEvent/back';
 
 const Tab = createMaterialTopTabNavigator();
 
 const Order = (props) => {
   const { navigation } = props;
+  back(navigation);
   return (
     <View style={{ flex: 1, paddingTop: 50, backgroundColor: 'white' }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12 }}>
