@@ -95,7 +95,6 @@ const styleAddShippingAddress = StyleSheet.create({
       justifyContent: 'center',
     },
     body: {
-      flex: 3,
       justifyContent: 'center',
       alignItems: 'center', 
     },
@@ -104,9 +103,9 @@ const styleAddShippingAddress = StyleSheet.create({
   
 
     txtOrderDetail: {
-      fontSize: 16,
+      fontSize: 18,
       color: 'black',
-      fontWeight: 'bold',
+      fontWeight: '800',
       marginStart: 70,
     },
     icBack: {
@@ -121,7 +120,6 @@ const styleAddShippingAddress = StyleSheet.create({
       marginBottom: 20,
     },
     header: {
-      flex: 0.4,
     },
 
 

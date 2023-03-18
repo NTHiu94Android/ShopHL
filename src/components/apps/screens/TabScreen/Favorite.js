@@ -4,9 +4,9 @@ import React from 'react'
 const Favorite = () => {
 
   return (
-    <View style={{ position: 'relative', flex: 1 }}>
+    <View style={{ position: 'relative', flex: 1, backgroundColor: 'white' }}>
       <View style={styles.header}>
-        <Image source={require('../../../../assets/images/Kinhlup.png')} style={styles.Icon} />
+        <Image source={require('../../../../assets/images/ic_search.png')} style={styles.Icon} />
         <Text style={styles.h1}>Favorites</Text>
         <Image source={require('../../../../assets/images/Cart.png')} style={styles.Icon} />
       </View>
@@ -39,8 +39,9 @@ const styles = StyleSheet.create({
     height: 24,
   },
   h1: {
-    fontWeight: "bold",
-    fontSize: 24,
+    color: 'black',
+    fontSize: 18,
+    fontWeight: '800',
     flex: 8,
     textAlign: 'center',
   },
@@ -56,7 +57,9 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0, 0, 0, 0.2)',
   },
   imgLst: {
-
+    width: 100,
+    height: 100,
+    borderRadius: 10,
   },
   listItemName: {
     flex: 5,
@@ -64,12 +67,14 @@ const styles = StyleSheet.create({
   },
   TextlstName: {
     fontWeight: 'normal',
-    fontSize: 20,
+    fontSize: 14,
+    fontWeight: '400',
     marginBottom: 5,
   },
   TextlstPrice: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
+    fontWeight: '700',
     marginTop: 5,
   },
   listItemIcon: {
@@ -90,8 +95,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: '400'
+    fontSize: 18,
+    fontWeight: '600'
   },
 
 })

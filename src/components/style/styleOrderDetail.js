@@ -40,8 +40,7 @@ const styleOrderDetail = StyleSheet.create({
     marginRight: 30,
   },
   viewCustomer:{
-    paddingStart: 20,
-    height: 40,
+    padding: 18,
     flexDirection: 'row',
     color: 'black',
     justifyContent:'flex-start',
@@ -51,11 +50,18 @@ const styleOrderDetail = StyleSheet.create({
   },
 
   viewTxtCustom:{
-    flex: 3,
     marginHorizontal: 10,
     paddingHorizontal: 5,
-    paddingVertical: 15,
     marginTop: 20,
+    borderRadius: 4,
+    elevation: 5,
+    shadowOffset: {
+      width: 1,
+      height: 3
+    },
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
+    marginBottom: 6
   },
  
 
@@ -99,23 +105,14 @@ const styleOrderDetail = StyleSheet.create({
   },
 
   viewTotal:{
-    flex: 1,
     paddingTop: 15,
     flexDirection: 'row',
     color: 'black',
     justifyContent:'space-around',
 
-    // justifyContent:'flex-start',
-
-    backgroundColor: 'white',
-
   },
   viewDetail:{
-
     marginTop: 1,
-    backgroundColor: 'white',
-    height: 120,
-
   },
 
   txtOrder:{
@@ -126,25 +123,30 @@ const styleOrderDetail = StyleSheet.create({
     marginRight: 30,
   },
   viewOrder:{
-    paddingStart: 18,
-    height: 40,
     flexDirection: 'row',
     color: 'black',
-    justifyContent:'flex-start',
+    justifyContent:'space-between',
     alignItems: 'center',
     backgroundColor: 'white',
-
+    padding: 18
   },
 
   viewTxtOrder:{
-    flex: 3,
     marginHorizontal: 10,
     paddingHorizontal: 5,
-    paddingVertical: 15,
+    borderRadius: 4,
+    elevation: 5,
+    shadowOffset: {
+      width: 1,
+      height: 3
+    },
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
+    marginBottom: 6,
   },
 
   body: {
-    flex: 5,
+    marginTop: 30
   },
 
   /*
@@ -152,9 +154,9 @@ const styleOrderDetail = StyleSheet.create({
 
   /* header */
   txtOrderDetail: {
-    fontSize: 16,
     color: 'black',
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: '800',
     marginStart: 70,
   },
   icBack: {
@@ -168,13 +170,12 @@ const styleOrderDetail = StyleSheet.create({
     marginTop: 15,
   },
   header: {
-    flex: 1,
   },
   /*
    */
   container: {
     flex: 1,
-    backgroundColor: '#E8E8E8',
+    backgroundColor: 'white',
     paddingTop: 50,
   },
 })

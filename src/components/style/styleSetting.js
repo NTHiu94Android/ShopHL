@@ -18,6 +18,7 @@ const styleSetting = StyleSheet.create({
     marginHorizontal: 20,
     paddingHorizontal: 15,
     marginVertical: 5,
+    elevation: 5,
   },
   footer: {
     flex: 1,
@@ -42,6 +43,7 @@ const styleSetting = StyleSheet.create({
     paddingHorizontal: 15,
     marginTop: 5,
     marginBottom: 10,
+    elevation: 5,
   },
   viewNotifications: {
     flexDirection: 'row',
@@ -82,7 +84,6 @@ const styleSetting = StyleSheet.create({
     marginTop: 30,
   },
   body: {
-    flex: 1,
     // backgroundColor: 'blue',
   },
   //
@@ -107,6 +108,7 @@ const styleSetting = StyleSheet.create({
     marginHorizontal: 20,
     paddingHorizontal: 15,
     marginVertical: 10,
+    elevation: 5,
   },
   icEdit1: {
     width: 16,
@@ -141,14 +143,13 @@ const styleSetting = StyleSheet.create({
     marginTop: 15,
   },
   header: {
-    flex: 1,
     // backgroundColor: 'green', 
   },
   //
 
   container: {
     flex: 1,
-    backgroundColor: '#CACCCE',
+    backgroundColor: 'white',
     paddingTop: 50,
   },
 })

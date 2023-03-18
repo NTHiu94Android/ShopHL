@@ -4,8 +4,9 @@ import React from 'react'
 const Profile = (props) => {
   const { navigation } = props;
   return (
-    <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
-      <View style={styles.container}>
+    <View style={{ flex: 1, backgroundColor: 'white'}}>
+
+      <ScrollView style={styles.container}>
         <Text style={styles.textProfile}>Profile</Text>
 
         {/* Body */}
@@ -106,8 +107,8 @@ const Profile = (props) => {
             </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   )
 }
 
@@ -115,9 +116,7 @@ export default Profile
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
+    flex: 1,
     marginTop: 50,
     backgroundColor: 'white'
   },
@@ -164,7 +163,7 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     marginHorizontal: 16,
     backgroundColor: 'white',
-    // elevation: 5,
+    elevation: 5,
     shadowColor: 'grey',
     borderRadius: 4,
     shadowOffset: {
