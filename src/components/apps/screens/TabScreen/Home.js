@@ -36,16 +36,8 @@ const Home = (props) => {
     const seletedItem = (item) => {
         setSelectedId(item._id);
         console.log(item._id);
-        navigation.navigate('Detail', { item: item })
-        console.log("Homejs selectedId: ", selectedId);
-    };
-    const renderItem = ({ item }) => {
-        return (
-            <Item
-                item={item}
-                onPress={() => seletedItem(item)}
-            />
-        );
+        navigation.navigate('ProductDetail', { item: item })
+        //console.log("Homejs selectedId: ", selectedId);
     };
 
 
@@ -202,14 +194,19 @@ const Home = (props) => {
 
                 </ScrollView>
 
-                <FlatList
+                {/* <FlatList
                     data={FlatListData}
                     renderItem={renderItem}
                     keyExtractor={(item) => item._id}
                     extraData={selectedId}
                     showsVerticalScrollIndicator={false}
                     numColumns={2}
-                />
+                /> */}
+                {
+                    FlatListData.map((item) =>
+                        <Item key={item._id} item={item} onPress={() => seletedItem(item)} />
+                    )
+                }
             </View>
         </ScrollView>
     )

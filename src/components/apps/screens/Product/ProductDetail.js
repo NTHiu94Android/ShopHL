@@ -1,37 +1,20 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, Pressable, ScrollView, TouchableOpacity, FlatList } from 'react-native'
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 
-const Item = ({ item, onPress }) => (
-  <TouchableOpacity onPress={onPress}>
-    <View style={{ flex: 1, flexDirection: 'column', padding: 4 }}>
-      <Image
-        style={{ flex: 1, width: 150, height: 96, borderRadius: 6, }}
-        resizeMode='cover'
-        source={{ uri: item.link, }} />
-      <View style={{ flex: 1 }}>
-        <Text
-          style={{ fontWeight: '400', fontSize: 13, lineHeight: 20, color: '#4e4b66' }}>
-          {item.field}
-        </Text>
-      </View>
-    </View>
-  </TouchableOpacity>
-);
 const ProductDetail = ({ route }) => {
   const { item } = route.params;
-  console.log("Detail item: ");
-  console.log(item);
+  // console.log("Detail item: ");
+  // console.log(item);
   return (
-    <View style={{ flex: 1 }}>
-      <View>
+    <ScrollView style={{ flex: 1 }}>
+      <View style={{position: "relative", justifyContent: 'center', alignItems: 'center', paddingTop: 50}}>
         <Image
-          style={{ width: 400, height: 450, position: "relative", }}
+          style={{ width: Dimensions.get('window').width - 24, height: 400 }}
           resizeMode='cover'
           source={{
             uri: item.link,
-          }}
-        />
-        <View style={{ position: "absolute" }}>
+          }}/>
+        <View style={{ position: "absolute", top: 0, left: 0 }}>
           <Image
             resizeMode='cover'
             source={require('../../../../assets/images/ic_back.png')}
@@ -44,7 +27,8 @@ const ProductDetail = ({ route }) => {
           />
         </View>
       </View>
-      <View style={{ flex: 5, marginLeft: 24, marginTop: 15, marginRight: 24, }}>
+
+      <View style={{  marginLeft: 24, marginTop: 15, marginRight: 24, }}>
         <Text style={{ color: 'black', fontWeight: '800', fontSize: 24, marginTop: 16, lineHeight: 30.47 }}>{item.field}</Text>
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ color: 'black', fontWeight: '700', fontSize: 30, lineHeight: 40.92, marginTop: 10, flex: 3 }}>
@@ -97,7 +81,7 @@ const ProductDetail = ({ route }) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View >
+    </ScrollView >
   )
 
 }
