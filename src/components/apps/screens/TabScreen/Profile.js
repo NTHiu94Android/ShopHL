@@ -32,7 +32,7 @@ const Profile = (props) => {
                 <Text style={styles.textName}>My orders</Text>
                 <Text style={styles.textStatus}>Already have 10 orders</Text>
               </View>
-              <TouchableOpacity onPress={() => navigation.navigate('Order')}>
+              <TouchableOpacity onPress={() => navigation.navigate('OrderStack')}>
                 <Image
                   style={styles.iconTopBar}
                   resizeMode='cover'
@@ -64,7 +64,7 @@ const Profile = (props) => {
                 <Text style={styles.textName}>Payment Method</Text>
                 <Text style={styles.textStatus}>You have 2 cards</Text>
               </View>
-              <TouchableOpacity onPress={() => navigation.navigate('Order')}>
+              <TouchableOpacity onPress={() => navigation.navigate('OrderStack')}>
                 <Image
                   style={styles.iconTopBar}
                   resizeMode='cover'
@@ -80,7 +80,7 @@ const Profile = (props) => {
                 <Text style={styles.textName}>My reviews</Text>
                 <Text style={styles.textStatus}>Reviews for 5 items</Text>
               </View>
-              <TouchableOpacity onPress={() => navigation.navigate('Order')}>
+              <TouchableOpacity onPress={() => navigation.navigate('OrderStack')}>
                 <Image
                   style={styles.iconTopBar}
                   resizeMode='cover'

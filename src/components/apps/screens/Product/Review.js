@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, ScrollView } from 'react-native'
 import React from 'react'
+import back from '../../../backEvent/back';
 
 const DataDemo = [
   {
@@ -133,7 +134,7 @@ const Item = ({ item, onPress }) => (
 
 const Review = (props) => {
   const { navigation } = props;
-
+  back(navigation);
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{ flex: 1, paddingTop: 50, backgroundColor: 'white', paddingHorizontal: 12 }}>

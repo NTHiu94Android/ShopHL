@@ -1,9 +1,11 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { Entypo, AntDesign } from '@expo/vector-icons';
+import back from '../../../backEvent/back';
 
 const CheckOut = (props) => {
   const { navigation } = props;
+  back(navigation);
   return (
     <View style={{ flex: 1, paddingTop: 56, paddingHorizontal: 20, justifyContent: 'space-between' }}>
       <View style={{ flexDirection: 'row' }}>

@@ -2,12 +2,14 @@ import { Image, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-n
 import React, { useState } from 'react';
 
 import styleSetting from '../../../style/styleSetting';
+import back from '../../../backEvent/back';
 
 const Setting = (props) => {
   const { navigation } = props;
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
+  back(navigation);
   return (
     <View style={styleSetting.container}>
       <View style={styleSetting.header}>

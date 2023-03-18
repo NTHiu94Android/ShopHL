@@ -1,8 +1,10 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
+import back from '../../../backEvent/back';
 
 const Success = (props) => {
   const { navigation } = props;
+  back(navigation);
   return (
     <View style={{ padding: 30, flex: 1, flexDirection: 'column', justifyContent: 'space-evenly' }}>
       <View style={{alignItems:'center'}}>

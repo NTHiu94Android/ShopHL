@@ -11,9 +11,6 @@ const SplashScreen = (props) => {
     // }, []);
     return (
         <View style={{flex: 1}}>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text>SplashScreen</Text>
-            </View>
             <View>
                 <Image style={styles.img} source={require('../../assets/images/logo.png')}></Image>
                 <Text style={styles.text} >Hoang Long</Text>

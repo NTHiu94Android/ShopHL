@@ -1,9 +1,12 @@
 import { Button, Pressable, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import styleAddShippingAddress from '../../../style/styleAddShippingAddress'
+import back from '../../../backEvent/back';
 
 const Shipping = (props) => {
   const { navigation } = props;
+
+  back(navigation);
   return (
     <View style={styleAddShippingAddress.container}>
       <View style={styleAddShippingAddress.header}>

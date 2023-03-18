@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'react-native'
-import React from 'react'
+import React from 'react';
+import back from '../../backEvent/back';
 
 const Register = (props) => {
   const { navigation } = props;
+  back(navigation);
   return (
     <View style={{ bottom: 60 }}>
       <View style={{ width: 300, height: 300, flexDirection: 'row', alignItems: 'center', left: 50 }}>
