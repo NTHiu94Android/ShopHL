@@ -10,13 +10,13 @@ import Cart from './screens/TabScreen/Cart';
 import Profile from './screens/TabScreen/Profile';
 import SearchScreen from './screens/Search/SearchScreen';
 import OrderDetail from './screens/Order/OrderDetail';
-import ProductDetail from './screens/Product/ProductDetail';
 import CheckOut from './screens/Cart/CheckOut';
 import Success from './screens/Cart/Success';
 import Review from './screens/Product/Review';
 import Order from './screens/Order/Order';
 import Setting from './screens/Setting/Setting';
 import Shipping from './screens/Shipping/Shipping';
+import Detail from './screens/Product/Detail';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
