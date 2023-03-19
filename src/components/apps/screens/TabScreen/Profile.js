@@ -1,110 +1,113 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native'
 import React from 'react'
 
 const Profile = (props) => {
   const { navigation } = props;
   return (
-    <View style={styles.container}>
-      <Text style={styles.textProfile}>Profile</Text>
+    <View style={{ flex: 1, backgroundColor: 'white'}}>
 
-      {/* Body */}
-      <View>
+      <ScrollView style={styles.container}>
+        <Text style={styles.textProfile}>Profile</Text>
 
-        {/* Profile */}
-        <View style={styles.viewProfile}>
-          <View style={styles.viewImgProfile0}>
-            <Image
-              style={[styles.iconTopBar, { borderRadius: 80, width: 80, height: 80 }]}
-              resizeMode='cover'
-              source={require('../../../../assets/images/avataruser.png')} />
-            <View style={styles.viewInfo}>
-              <Text style={[styles.textName, { color: 'black', }]}>Trong Hieu</Text>
-              <Text style={styles.textStatus}>View my profile</Text>
-            </View>
-          </View>
-        </View>
+        {/* Body */}
+        <View>
 
-        {/* My orders */}
-        <View style={styles.viewOption}>
-          <View style={styles.viewImgProfile}>
-            <View style={styles.viewInfo}>
-              <Text style={styles.textName}>My orders</Text>
-              <Text style={styles.textStatus}>Already have 10 orders</Text>
-            </View>
-            <TouchableOpacity onPress={() => navigation.navigate('Order')}>
+          {/* Profile */}
+          <View style={styles.viewProfile}>
+            <View style={styles.viewImgProfile0}>
               <Image
-                style={styles.iconTopBar}
+                style={[styles.iconTopBar, { borderRadius: 80, width: 80, height: 80 }]}
                 resizeMode='cover'
-                source={require('../../../../assets/images/next2.png')} />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* My cloud */}
-        <View style={styles.viewOption}>
-          <View style={styles.viewImgProfile}>
-            <View style={styles.viewInfo}>
-              <Text style={styles.textName}>Shipping Addresses</Text>
-              <Text style={styles.textStatus}>03 Addresses</Text>
+                source={require('../../../../assets/images/avataruser.png')} />
+              <View style={styles.viewInfo}>
+                <Text style={[styles.textName, { color: 'black', }]}>Trong Hieu</Text>
+                <Text style={styles.textStatus}>View my profile</Text>
+              </View>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate('Order')}>
-              <Image
-                style={styles.iconTopBar}
-                resizeMode='cover'
-                source={require('../../../../assets/images/next2.png')} />
-            </TouchableOpacity>
           </View>
-        </View>
 
-        {/* Data and storage */}
-        <View style={styles.viewOption}>
-          <View style={styles.viewImgProfile}>
-            <View style={styles.viewInfo}>
-              <Text style={styles.textName}>Payment Method</Text>
-              <Text style={styles.textStatus}>You have 2 cards</Text>
+          {/* My orders */}
+          <View style={styles.viewOption}>
+            <View style={styles.viewImgProfile}>
+              <View style={styles.viewInfo}>
+                <Text style={styles.textName}>My orders</Text>
+                <Text style={styles.textStatus}>Already have 10 orders</Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate('OrderStack')}>
+                <Image
+                  style={styles.iconTopBar}
+                  resizeMode='cover'
+                  source={require('../../../../assets/images/next2.png')} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate('Order')}>
-              <Image
-                style={styles.iconTopBar}
-                resizeMode='cover'
-                source={require('../../../../assets/images/next2.png')} />
-            </TouchableOpacity>
           </View>
-        </View>
 
-        {/* Account and security */}
-        <View style={styles.viewOption}>
-          <View style={styles.viewImgProfile}>
-            <View style={styles.viewInfo}>
-              <Text style={styles.textName}>My reviews</Text>
-              <Text style={styles.textStatus}>Reviews for 5 items</Text>
+          {/* My cloud */}
+          <View style={styles.viewOption}>
+            <View style={styles.viewImgProfile}>
+              <View style={styles.viewInfo}>
+                <Text style={styles.textName}>Shipping Addresses</Text>
+                <Text style={styles.textStatus}>03 Addresses</Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate('Shipping')}>
+                <Image
+                  style={styles.iconTopBar}
+                  resizeMode='cover'
+                  source={require('../../../../assets/images/next2.png')} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate('Order')}>
-              <Image
-                style={styles.iconTopBar}
-                resizeMode='cover'
-                source={require('../../../../assets/images/next2.png')} />
-            </TouchableOpacity>
           </View>
-        </View>
 
-        {/* Setting */}
-        <View style={styles.viewOption}>
-          <View style={styles.viewImgProfile}>
-            <View style={styles.viewInfo}>
-              <Text style={styles.textName}>Setting</Text>
-              <Text style={styles.textStatus}>Notification, Password, FAQ, Contact</Text>
+          {/* Data and storage */}
+          <View style={styles.viewOption}>
+            <View style={styles.viewImgProfile}>
+              <View style={styles.viewInfo}>
+                <Text style={styles.textName}>Payment Method</Text>
+                <Text style={styles.textStatus}>You have 2 cards</Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate('OrderStack')}>
+                <Image
+                  style={styles.iconTopBar}
+                  resizeMode='cover'
+                  source={require('../../../../assets/images/next2.png')} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate('Order')}>
-              <Image
-                style={styles.iconTopBar}
-                resizeMode='cover'
-                source={require('../../../../assets/images/next2.png')} />
-            </TouchableOpacity>
+          </View>
 
+          {/* Account and security */}
+          <View style={styles.viewOption}>
+            <View style={styles.viewImgProfile}>
+              <View style={styles.viewInfo}>
+                <Text style={styles.textName}>My reviews</Text>
+                <Text style={styles.textStatus}>Reviews for 5 items</Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate('OrderStack')}>
+                <Image
+                  style={styles.iconTopBar}
+                  resizeMode='cover'
+                  source={require('../../../../assets/images/next2.png')} />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Setting */}
+          <View style={styles.viewOption}>
+            <View style={styles.viewImgProfile}>
+              <View style={styles.viewInfo}>
+                <Text style={styles.textName}>Setting</Text>
+                <Text style={styles.textStatus}>Notification, Password, FAQ, Contact</Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate('Setting')}>
+                <Image
+                  style={styles.iconTopBar}
+                  resizeMode='cover'
+                  source={require('../../../../assets/images/next2.png')} />
+              </TouchableOpacity>
+
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   )
 }
@@ -113,9 +116,7 @@ export default Profile
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
+    flex: 1,
     marginTop: 50,
     backgroundColor: 'white'
   },
@@ -165,6 +166,12 @@ const styles = StyleSheet.create({
     elevation: 5,
     shadowColor: 'grey',
     borderRadius: 4,
+    shadowOffset: {
+      width: 1,
+      height: 3
+    },
+    shadowRadius: 5,
+    shadowOpacity: 0.3
   },
   viewImgProfile0: {
     flexDirection: 'row',

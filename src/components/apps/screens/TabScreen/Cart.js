@@ -1,38 +1,41 @@
-import { Button, FlatList, Image, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { Entypo, AntDesign } from '@expo/vector-icons';
 
 const Cart = (props) => {
   const { navigation } = props;
   return (
-    <View style={{ flex: 1, justifyContent: 'center', paddingTop: 56, paddingHorizontal: 20 }}>
-      <Text style={{ textAlign: 'center', fontSize: 16, fontWeight: 'bold' }}>My cart</Text>
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={DATA}
-          renderItem={({ item }) =>
-            <Item
-              prodName={item.prodName}
-              imageurl={item.imageurl}
-              price={item.price}
-              quality={item.quality} />
-          }
-          keyExtractor={item => item.id}
-        />
-      </SafeAreaView>
-      <View style={{ height: 150, justifyContent: 'space-between' }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#ffff', borderRadius: 10, paddingStart: 11 }}>
-          <TextInput>Enter your promo code</TextInput>
-          <AntDesign name="rightsquare" size={44} color="black" />
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1, justifyContent: 'center', marginTop: 50, paddingHorizontal: 20, backgroundColor: 'white' }}>
+        <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '800', marginTop: 18, marginBottom: 12 }}>My cart</Text>
+        <SafeAreaView style={styles.container}>
+          <FlatList
+            data={DATA}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) =>
+              <Item
+                prodName={item.prodName}
+                imageurl={item.imageurl}
+                price={item.price}
+                quality={item.quality} />
+            }
+            keyExtractor={item => item.id}
+          />
+        </SafeAreaView>
+        <View style={{ height: 150, justifyContent: 'space-between' }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#ffff', borderRadius: 10, paddingStart: 11 }}>
+            <TextInput>Enter your promo code</TextInput>
+            <AntDesign name="rightsquare" size={44} color="black" />
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
+            <Text style={{ fontSize: 20 }}>Total:</Text>
+            <Text style={{ fontSize: 20 }}>$ 95.00</Text>
+          </View>
+          <TouchableOpacity onPress={() => navigation.navigate("CheckOut")} style={{ backgroundColor: '#000', height: 60, borderRadius: 8, flexDirection: 'column', justifyContent: 'center' }}>
+            <Text style={{ color: '#fff', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Check out</Text>
+            {/* Bấm đây nhảy qua check out */}
+          </TouchableOpacity>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
-          <Text style={{ fontSize: 20 }}>Total:</Text>
-          <Text style={{ fontSize: 20 }}>$ 95.00</Text>
-        </View>
-        <TouchableOpacity onPress={() => navigation.navigate("CheckOut")} style={{ backgroundColor: '#000', height: 60, borderRadius: 8, flexDirection: 'column', justifyContent: 'center' }}>
-          <Text style={{ color: '#fff', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Check out</Text>
-          {/* Bấm đây nhảy qua check out */}
-        </TouchableOpacity>
       </View>
     </View>
   )
