@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react'
 import { 
-  addOrder, addToCart, getProducts, get_order_by_id, get_order_by_idUser_and_status, 
-  get_order_details_by_idOrder, get_product_by_id 
+  addOrder, addToCart, delete_order_detail, getProducts, get_order_by_id, get_order_by_idUser, get_order_by_idUser_and_status, 
+  get_order_details_by_idOrder, get_product_by_id, update_order_detail 
 } from './AppService';
 import { UserContext } from '../users/UserContext';
 
@@ -11,7 +11,9 @@ export const AppContextProvider = (props) => {
   const { children } = props;
   const {user} = useContext(UserContext);
   const [listCart, setListCart] = useState([]);
+  const [listFavorite, setListFavorite] = useState([]);
   const [countCart, setCountCart] = useState(0);
+  const [countFavorite, setCountFavorite] = useState(0);
 
   //Lay danh sach san pham
   const onGetProducts = async () => {
@@ -28,7 +30,7 @@ export const AppContextProvider = (props) => {
   const onGetProductById = async (idProduct) => {
     try {
       const product = await get_product_by_id(idProduct);
-      console.log("OnGetProductById Response: ", product.data);
+      //console.log("OnGetProductById Response: ", product.data);
       return product.data;
     } catch (error) {
       console.log("OnGetProductById Error: ", error);
@@ -39,11 +41,47 @@ export const AppContextProvider = (props) => {
   const onAddToCart = async (totalPrice, amount, idOrder, idProduct) => {
     try {
       const respone = await addToCart(totalPrice, amount, idOrder, idProduct);
-      console.log("Add to cart: ", respone.data);
+      //console.log("Add to cart: ", respone.data);
       setCountCart(countCart + 1);
       return respone.data;
     } catch (error) {
       console.log("Add to cart error: ", error);
+    }
+  };
+
+  //Them san pham vao yeu thich
+  const onAddToFavorite = async (totalPrice, amount, idOrder, idProduct) => {
+    try {
+      const respone = await addToCart(totalPrice, amount, idOrder, idProduct);
+      //console.log("Add to favorite: ", respone.data);
+      setCountFavorite(countFavorite + 1);
+      return respone.data;
+    } catch (error) {
+      console.log("Add to cart error: ", error);
+    }
+  };
+
+  //Xoa san pham khoi gio hang/yeu thich
+  const onDeleteOrderDetail = async (idOrderDetail) => {
+    try {
+      const respone = await delete_order_detail(idOrderDetail);
+      //console.log("Delete cart: ", respone.data);
+      setCountCart(countCart - 1);
+      setCountFavorite(countFavorite - 1);
+      return respone.data;
+    } catch (error) {
+      console.log("Delete cart error: ", error);
+    }
+  };
+
+  //Cap nhat san pham trong gio hang/yeu thich
+  const onUpdateOrderDetail = async (_idOrderDetail, _totalPrice, _amount, _idOrder, _idProduct) => {
+    try {
+      const respone = await update_order_detail(_idOrderDetail, _totalPrice, _amount, _idOrder, _idProduct);
+      //console.log("Update cart: ", respone.data);
+      return respone.data;
+    } catch (error) {
+      console.log("Update cart error: ", error);
     }
   };
 
@@ -81,7 +119,7 @@ export const AppContextProvider = (props) => {
   const onGetOrderDetailsByIdOrder = async (idOrder) => {
     try {
       const orderDetail = await get_order_details_by_idOrder(idOrder);
-      console.log("OnGetOrderDetailByIdOrder Response: ", orderDetail.data);
+      //console.log("OnGetOrderDetailByIdOrder Response: ", orderDetail.data);
       return orderDetail.data;
     } catch (error) {
       console.log("OnGetOrderDetailByIdOrder Error: ", error);
@@ -90,9 +128,11 @@ export const AppContextProvider = (props) => {
 
   return (
     <AppContext.Provider value={{
-      onGetProducts, onAddToCart, onAddOrder,
+      onGetProducts, onAddToCart, onAddToFavorite, onAddOrder,
       listCart, setListCart, onGetOrdersByIdUser, onGetOrderById,
-      onGetOrderDetailsByIdOrder, onGetProductById, countCart, setCountCart
+      onGetOrderDetailsByIdOrder, onGetProductById, countCart, setCountCart,
+      countFavorite, setCountFavorite,
+      listFavorite, setListFavorite, onDeleteOrderDetail, onUpdateOrderDetail
     }}>
       {children}
     </AppContext.Provider>

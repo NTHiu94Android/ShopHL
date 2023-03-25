@@ -1,39 +1,81 @@
 import { FlatList, Image, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Entypo, AntDesign } from '@expo/vector-icons';
 import { AppContext } from '../../AppContext';
 import { UserContext } from '../../../users/UserContext';
 
 const Cart = (props) => {
   const { navigation } = props;
-  const {user} = useContext(UserContext);
-  const {onGetOrderDetailsByIdOrder, listCart, setListCart, onGetProductById, title} = useContext(AppContext);
+  const { user } = useContext(UserContext);
+  const {
+    onGetOrderDetailsByIdOrder, listCart, setListCart, onGetProductById,
+    countCart, setCountCart, onUpdateOrderDetail, onDeleteOrderDetail
+  } = useContext(AppContext);
+
+  const [total, setTotal] = useState(0);
 
   //Lay danh sach san phma trong gio hang
   useEffect(() => {
-    const getListCart = async () => {
+    const getListCart = async () => { 
       try {
+        let sum = 0;
         const response = await onGetOrderDetailsByIdOrder(user.cart);
-        console.log("List cart: ", response);
+        //console.log("List cart: ", response);
         for (let i = 0; i < response.length; i++) {
           const productId = response[i].idProduct;
-          console.log("Product id: ", productId);
+          //console.log("Product id: ", productId);
           const product = await onGetProductById(productId);
           //console.log(product);
           response[i].imageurl = product.listImage[0];
-          console.log("Product image: ", product.listImage[0]); 
+          //console.log("Product image: ", product.listImage[0]);
           response[i].prodName = product.name;
-          response[i].price = product.price * response[i].amount;
+          response[i].totalPrice = product.price * response[i].amount;
+          response[i].price = product.price;
+          sum += response[i].price;
         }
+        setTotal(sum); 
         setListCart(response);
       } catch (error) {
         console.log("Get list cart error: ", error);
       }
     };
-    getListCart();
-  }, [title]);
+    getListCart(); 
+  }, [countCart]);
 
+  // useEffect(() => {
+  //   //updateItemCart
+  // }, [amount]);
+
+  const updateItemCart = async (_idOrderDetail, _totalPrice, _amount, _idOrder, _idProduct) => {
+    try {
+      const response = await onUpdateOrderDetail(_idOrderDetail, _totalPrice, _amount, _idOrder, _idProduct);
+      console.log("Update item cart: ", response);
+      setCountCart(countCart + 1);
+    } catch (error) {
+      console.log("Update item cart error: ", error);
+    }
+  };
+
+  const updateItem = (id, newValue) => {
+    const newItems = listCart.map(item => { 
+      if (item._id === id) {
+        const itemNew = { ...item, amount: newValue, totalPrice: item.price * newValue };
+        console.log(">>>>>>>>>>>>TotalPrice: ", itemNew.price * itemNew.amount);
+        updateItemCart(itemNew._id, itemNew.totalPrice, itemNew.amount, itemNew.idOrder, itemNew.idProduct);
+      }
+      return item;
+    });
+    setListCart(newItems);
+  };
+
+  const deleteItem = async (id) => {
+    const newItems = listCart.filter(item => item._id !== id);
+    setListCart(newItems);
+    const res = await onDeleteOrderDetail(id);
+    console.log("Delete item cart: ", res);
+  };
   
+
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{ flex: 1, justifyContent: 'center', marginTop: 50, paddingHorizontal: 20, backgroundColor: 'white' }}>
@@ -44,13 +86,13 @@ const Cart = (props) => {
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) =>
               <Item
-                prodName={item.prodName}
-                imageurl={item.imageurl}
-                price={item.price}
-                quality={item.amount} />
+                deleteItem={() => deleteItem(item._id)}
+                plus={() => updateItem(item._id, item.amount + 1)}
+                minus={() => updateItem(item._id, item.amount > 1 ? item.amount - 1 : 1)} 
+                item={item} />
             }
             keyExtractor={item => item._id}
-          />
+          />  
         </SafeAreaView>
         <View style={{ height: 150, justifyContent: 'space-between' }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#ffff', borderRadius: 10, paddingStart: 11 }}>
@@ -59,7 +101,7 @@ const Cart = (props) => {
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
             <Text style={{ fontSize: 20 }}>Total:</Text>
-            <Text style={{ fontSize: 20 }}>$ 95.00</Text>
+            <Text style={{ fontSize: 20 }}>$ {total}</Text>
           </View>
           <TouchableOpacity onPress={() => navigation.navigate("CheckOut")} style={{ backgroundColor: '#000', height: 60, borderRadius: 8, flexDirection: 'column', justifyContent: 'center' }}>
             <Text style={{ color: '#fff', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Check out</Text>
@@ -73,23 +115,30 @@ const Cart = (props) => {
 
 export default Cart
 
-const Item = ({ prodName, price, quality, imageurl }) => (
-  <View style={styles.item}>
+const Item = ({item, plus, minus, deleteItem}) => (
+  
+  <View style={styles.item}> 
     <View style={{ flexDirection: 'row' }}>
-      <Image source={{ uri: imageurl }} style={styles.image} />
+      <Image source={{ uri: item.imageurl }} style={styles.image} />
       <View style={{ justifyContent: 'space-between', paddingVertical: 5, paddingStart: 10 }}>
         <View>
-          <Text style={{ fontSize: 14 }}>{prodName}</Text>
-          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>$ {price}</Text>
+          <Text style={{ fontSize: 14 }}>{item.prodName}</Text>
+          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>$ {item.totalPrice}</Text>
         </View>
         <View style={styles.qualityRange}>
-          <Entypo name="squared-plus" size={30} color="black" />
-          <Text style={{ fontSize: 18 }}>{quality}</Text>
-          <Entypo name="squared-minus" size={30} color="black" />
+          <TouchableOpacity onPress={plus}>
+            <Entypo name="squared-plus" size={30} color="black" />
+          </TouchableOpacity>
+          <Text style={{ fontSize: 18 }}>{item.amount}</Text>
+          <TouchableOpacity onPress={minus}>
+            <Entypo name="squared-minus" size={30} color="black" />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
-    <AntDesign name="closecircleo" size={20} color="black" />
+    <TouchableOpacity onPress={deleteItem}>
+      <AntDesign name="closecircleo" size={20} color="black" />
+    </TouchableOpacity>
   </View>
 );
 
@@ -103,13 +152,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     borderBottomWidth: 0.2,
     borderBottomColor: 'gray',
 
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     borderRadius: 10,
   },
   title: {

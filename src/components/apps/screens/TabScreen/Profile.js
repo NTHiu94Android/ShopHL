@@ -1,13 +1,16 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
+import { UserContext } from '../../../users/UserContext';
 
 const Profile = (props) => {
   const { navigation } = props;
+  const {user} = useContext(UserContext);
+
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{ flex: 1, backgroundColor: 'white' }}>
 
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container}> 
           <Text style={styles.textProfile}>Profile</Text>
 
           {/* Body */}
@@ -19,9 +22,9 @@ const Profile = (props) => {
                 <Image
                   style={[styles.iconTopBar, { borderRadius: 80, width: 80, height: 80 }]}
                   resizeMode='cover'
-                  source={require('../../../../assets/images/avataruser.png')} />
+                  source={{uri: user.avatar}} />
                 <View style={styles.viewInfo}>
-                  <Text style={[styles.textName, { color: 'black', }]}>Trong Hieu</Text>
+                  <Text style={[styles.textName, { color: 'black', }]}>{user.name}</Text>
                   <Text style={styles.textStatus}>View my profile</Text>
                 </View>
               </View>

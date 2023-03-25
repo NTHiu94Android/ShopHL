@@ -41,9 +41,21 @@ export const get_product_by_idBrand = async (_idBrand) => {
 //     return await CustomAxios().post("product/api/add-product", { name, price, describer, amount, color, idBrand });
 // };
 
-//Them 
+//Them san pham vao gio hang
 export const addToCart = async (totalPrice, amount, idOrder, idProduct) => {
     return await CustomAxios().post("order_detail/api/add-order_detail", { totalPrice, amount, idOrder, idProduct });
+};
+
+//Xoa san pham khoi gio hang/yeu thich
+export const delete_order_detail = async (_id) => {
+    return await CustomAxios().get("order_detail/api/delete-order_detail/" + _id);
+};
+
+//Update order detail
+export const update_order_detail = async (_id, totalPrice, amount, idOrder, idProduct) => {
+    return await CustomAxios().post("order_detail/api/update-order_detail/" + _id,
+        { totalPrice, amount, idOrder, idProduct }
+    );
 };
 
 //Lay order_details theo idOrder

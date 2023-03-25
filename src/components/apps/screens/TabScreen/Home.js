@@ -9,7 +9,7 @@ const Item = ({ item, onPress }) => (
                 <Image
                     style={{ width: '98%', height: 150, position: 'relative', borderRadius: 10 }}
                     resizeMode='cover'
-                    source={{ uri: item.listImage[0], }} />
+                    source={{ uri: item.listImage[0], }} /> 
                 <Image
                     style={{ width: 35, height: 35, position: 'absolute', right: 13, bottom: 60 }}
                     resizeMode='cover'
@@ -108,7 +108,7 @@ const Home = (props) => {
     useEffect(() => {
         const getData = async () => {
             const list = await onGetProducts();
-            console.log(list);
+            //console.log(list);
             setListProduct(list);
         };
         getData();

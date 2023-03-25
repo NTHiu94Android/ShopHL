@@ -6,7 +6,7 @@ import { UserContext } from '../../../users/UserContext';
 
 const ProductDetail = ({ route, navigation }) => {
   const { item } = route.params;
-  const {onAddToCart, listCart, setListCart} = useContext(AppContext);
+  const {onAddToCart, onAddToFavorite, listCart, setListCart, listFavorite, setListFavorite} = useContext(AppContext);
   const {user} = useContext(UserContext);
   const [count, setCount] = useState(1);
   
@@ -39,7 +39,23 @@ const ProductDetail = ({ route, navigation }) => {
     }
   };
 
-  console.log("List cart update: ", listCart);
+  //Them san pham vao favorite
+  const addToFavorite = async () => {
+    try {
+      const totalPrice = item.price * count;
+      const amount = count;
+      const idOrder = user.favorite;
+      const idProduct = item._id;
+      const order_detail = await onAddToFavorite(totalPrice, amount, idOrder, idProduct);
+      console.log("Add to favorite: ", order_detail);
+      setListFavorite(current => [...current, order_detail]);
+      navigation.navigate('Favorite');
+    } catch (error) {
+      console.log("Add to favorite error: ", error);
+    }
+  };
+
+  //console.log("List favorite update: ", listFavorite);
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -113,7 +129,7 @@ const ProductDetail = ({ route, navigation }) => {
       {/* ---------------------- */}
       <View style={styles.viewButton}>
         <View style={{ marginRight: 15 }}>
-          <TouchableOpacity style={styles.button1}>
+          <TouchableOpacity onPress={() => addToFavorite()} style={styles.button1}>
             <Image style={{ width: 24, height: 24 }}
               source={require('../../../../assets/images/ic_fvr.png')} />
           </TouchableOpacity>
