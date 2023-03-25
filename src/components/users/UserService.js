@@ -1,26 +1,27 @@
-// import CustomAxios from "../../helpers/Axiosinstance";
+import CustomAxios from "../../helpers/Axiosinstance";
 
-// export const register = async (email, password, name, description, imageAvatar, address) => {
-//     const body = {
-//         email: email,
-//         password: password,
-//         name: name,
-//         description: description,
-//         imageAvatar: imageAvatar,
-//         address: address,
-//     }
-//     const response = await CustomAxios().post('users/api/register', body);
-//     return response;
-// };
+export const register = async (email, password, name, birthday, address, numberPhone, avatar) => {
+    const body = {
+        email: email,
+        password: password,
+        name: name,
+        birthday: birthday,
+        numberPhone: numberPhone,
+        address: address,
+        avatar: avatar,
+    }
+    const response = await CustomAxios().post('users/api/register', body);
+    return response;
+};
 
-// export const login = async (email, password) => {
-//     const body = {
-//         email: email,
-//         password: password,
-//     }
-//     const response = await CustomAxios().post('users/api/login', body);
-//     return response;
-// }
+export const login = async (email, password) => {
+    const body = {
+        email: email,
+        password: password,
+    }
+    const response = await CustomAxios().post('users/api/login', body);
+    return response;
+}
 
 
 

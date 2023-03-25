@@ -1,15 +1,30 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { UserContext } from '../UserContext';
 
 const Login = (props) => {
   const { navigation } = props;
-  const { setUser } = useContext(UserContext);
-  const getUser = () => {
-    const us = { username: "admin", password: "123" }
-    setUser(us);
-  }
+  const { setUser, onLogin } = useContext(UserContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert('Please fill all the fields');
+      return;
+    };
+    const res = await onLogin(email, password);
+    if (res.statusCode === 200) {
+      setUser(res.data);
+    } else {
+      alert('Login failed');
+    }
+  };
+  // const getUser = () => {
+  //   const us = { username: "admin", password: "123" }
+  //   setUser(us);
+  // }
   return (
     <View>
       <View style={{ width: 300, height: 300, flexDirection: 'row', alignItems: 'center', left: 50 }}>
@@ -21,16 +36,25 @@ const Login = (props) => {
         <Text style={{ fontWeight: 'bold', color: 'grey', fontSize: 25, left: 50, bottom: 100 }} >Hello !</Text>
         <Text style={{ fontWeight: 'bold', color: 'black', fontSize: 20, left: 50, bottom: 100 }} >WELCOME BACK</Text>
         <Text style={{ color: 'grey', left: 50, bottom: 50 }}>Email</Text>
-        <TextInput style={{ left: 50, bottom: 40 }} />
+        <TextInput
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Enter your email"
+          style={{ left: 50, bottom: 40 }} />
         <View style={{ width: 300, height: 1, backgroundColor: 'black', left: 50, bottom: 40 }} ></View>
 
         <Text style={{ color: 'grey', left: 50, bottom: 10 }}>Password</Text>
-        <TextInput style={{ left: 50 }} secureTextEntry={true}></TextInput>
+        <TextInput
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Enter your password"
+          style={{ left: 50 }}
+          secureTextEntry={true} />
         <View style={{ width: 300, height: 1, backgroundColor: 'black', left: 50 }} ></View>
 
         <Text style={{ top: 30, left: 150, color: 'black', fontWeight: '600' }} >Forgot Password</Text>
 
-        <TouchableOpacity style={styles.btn} onPress={() => getUser()}>
+        <TouchableOpacity style={styles.btn} onPress={() => handleLogin()}>
           <Text style={{ color: '#ffffff', textAlign: 'center', top: 15, fontWeight: 'bold' }} >Log In</Text>
         </TouchableOpacity>
 

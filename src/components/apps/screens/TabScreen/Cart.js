@@ -1,25 +1,55 @@
 import { FlatList, Image, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Entypo, AntDesign } from '@expo/vector-icons';
+import { AppContext } from '../../AppContext';
+import { UserContext } from '../../../users/UserContext';
 
 const Cart = (props) => {
   const { navigation } = props;
+  const {user} = useContext(UserContext);
+  const {onGetOrderDetailsByIdOrder, listCart, setListCart, onGetProductById, title} = useContext(AppContext);
+
+  //Lay danh sach san phma trong gio hang
+  useEffect(() => {
+    const getListCart = async () => {
+      try {
+        const response = await onGetOrderDetailsByIdOrder(user.cart);
+        console.log("List cart: ", response);
+        for (let i = 0; i < response.length; i++) {
+          const productId = response[i].idProduct;
+          console.log("Product id: ", productId);
+          const product = await onGetProductById(productId);
+          //console.log(product);
+          response[i].imageurl = product.listImage[0];
+          console.log("Product image: ", product.listImage[0]); 
+          response[i].prodName = product.name;
+          response[i].price = product.price * response[i].amount;
+        }
+        setListCart(response);
+      } catch (error) {
+        console.log("Get list cart error: ", error);
+      }
+    };
+    getListCart();
+  }, [title]);
+
+  
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{ flex: 1, justifyContent: 'center', marginTop: 50, paddingHorizontal: 20, backgroundColor: 'white' }}>
         <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '800', marginTop: 18, marginBottom: 12 }}>My cart</Text>
         <SafeAreaView style={styles.container}>
           <FlatList
-            data={DATA}
+            data={listCart}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) =>
               <Item
                 prodName={item.prodName}
                 imageurl={item.imageurl}
                 price={item.price}
-                quality={item.quality} />
+                quality={item.amount} />
             }
-            keyExtractor={item => item.id}
+            keyExtractor={item => item._id}
           />
         </SafeAreaView>
         <View style={{ height: 150, justifyContent: 'space-between' }}>
