@@ -8,7 +8,7 @@ import { UserContext } from '../users/UserContext';
 
 export const AppContext = createContext();
 
-export const AppContextProvider = (props) => {
+export const AppContextProvider = (props) => { 
   const { children } = props;
   const {user} = useContext(UserContext);
   const [listCart, setListCart] = useState([]);
@@ -171,7 +171,7 @@ export const AppContextProvider = (props) => {
       countFavorite, setCountFavorite, onGetProductsByBrand,
       listFavorite, setListFavorite, onDeleteOrderDetail, onUpdateOrderDetail,
       total, setTotal, ship, setShip, listOrder, setListOrder, onGetOrderByIdUserAndStatus,
-      listProcessing, setListProcessing
+      listProcessing, setListProcessing, listDelivered, setListDelivered, listCanceled, setListCanceled
     }}>
       {children}
     </AppContext.Provider>

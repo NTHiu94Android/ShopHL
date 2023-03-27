@@ -10,7 +10,7 @@ const Favorite = (props) => {
   const {
     onGetOrderDetailsByIdOrder, listFavorite,
     setListFavorite, onGetProductById, countFavorite, setCountCart, countCart,
-    onDeleteOrderDetail, onUpdateOrderDetail, total, setTotal
+    onDeleteOrderDetail, onUpdateOrderDetail, total, setTotal, setListCart
   } = useContext(AppContext);
   //Lay danh sach san phma trong gio hang
   useEffect(() => {
@@ -71,6 +71,28 @@ const Favorite = (props) => {
     }
   };
 
+  const addOneToCart = async (it) => {
+    try {
+      //Cap nhat idOder tu idFavorite sang idCart
+      const itemToCart = listFavorite.find(item => item._id === it._id);
+      itemToCart.idOrder = user.cart;
+      setListCart(current => [...current, itemToCart]);
+      console.log("itemToCart: ", itemToCart);
+      setCountCart(countCart + 1);
+      setTotal(total + itemToCart.totalPrice);
+
+      //Xoa san pham khoi danh sach yeu thich
+      const listNew = listFavorite.filter(item => item._id !== it._id);
+      setListFavorite(listNew);
+      //console.log("listNew: ", listNew);
+
+      //Cap nhat tren database
+      await onUpdateOrderDetail(itemToCart._id, itemToCart.totalPrice, itemToCart.amount, user.cart, itemToCart.idProduct);
+    } catch (error) {
+      console.log("Add 1 to cart fail: ", error);
+    }
+  };
+
   return (
     <View style={{ position: 'relative', flex: 1, backgroundColor: 'white' }}>
       <View style={styles.header}>
@@ -92,6 +114,8 @@ const Favorite = (props) => {
         data={listFavorite}
         renderItem={({ item }) =>
           <Item
+            addOneToCart={() => addOneToCart(item)}
+            deleteFavoriteItem={() => deleteFavoriteItem(item._id)}
             name={item.name}
             image={item.image}
             price={item.price} />
@@ -182,7 +206,7 @@ const styles = StyleSheet.create({
 
 })
 
-const Item = ({ name, price, image }) => {
+const Item = ({ name, price, image, deleteFavoriteItem, addOneToCart }) => {
   return (
     <View style={styles.listItem}>
       <Image source={{ uri: image }} style={styles.imgLst} />
@@ -191,12 +215,12 @@ const Item = ({ name, price, image }) => {
         <Text style={styles.TextlstPrice}>$ {price}</Text>
       </View>
       <View style={styles.listItemIcon}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={deleteFavoriteItem}>
           <View style={{ alignSelf: 'flex-start', width: '100%', alignItems: 'center' }}>
             <Image source={require('../../../../assets/images/del.png')} style={{ width: 30, height: 30 }} />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={addOneToCart}>
           <View style={{ alignSelf: 'flex-start', width: '100%', alignItems: 'center' }}>
             <Image source={require('../../../../assets/images/shop.png')} style={{ width: 30, height: 30 }} />
           </View>

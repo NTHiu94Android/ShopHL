@@ -9,18 +9,8 @@ const CheckOut = (props) => {
   const { navigation } = props;
   const { user } = useContext(UserContext);
   const { total, setTotal, ship, onAddOrder, onUpdateOrderDetail, listCart, setListCart, setListProcessing } = useContext(AppContext);
-  console.log(user);
   console.log(">>>>>>>", total);
-  console.log(">>>>>> ", ship);
   back(navigation);
-
-  // const getTimeNow = () => {
-  //   const date = new Date();
-  //   const day = date.getDate();
-  //   const month = date.getMonth() + 1;
-  //   const year = date.getFullYear();
-  //   return `${day}/${month}/${year}`;
-  // };
 
   const gotoSuccess = async () => {
     const totalPrice = total + ship;
@@ -30,7 +20,7 @@ const CheckOut = (props) => {
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
     const orderDate = `${day}/${month}/${year}`;
-    const status = "processing";
+    const status = "Processing";
     let qtt = 0;
     for (let i = 0; i < listCart.length; i++) {
       qtt += listCart[i].amount;

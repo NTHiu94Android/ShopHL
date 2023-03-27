@@ -93,7 +93,7 @@ const Cart = (props) => {
     }else{
       let sum = 0;
       newItems.map(item => {
-        sum += item.totalPrice;
+        sum += item.totalPrice; 
         return item;
       });
       setTotal(sum);
