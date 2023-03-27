@@ -40,6 +40,7 @@ const ProductDetail = ({ route, navigation }) => {
       console.log("Total: ", total);
       console.log("Total price: ", totalPrice + total);
       setTotal(total + totalPrice);
+      setCount(1);
       navigation.navigate('Cart');
     } catch (error) {
       console.log("Add to cart error: ", error);

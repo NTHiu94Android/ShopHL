@@ -1,11 +1,10 @@
 import CustomAxios from "../../helpers/Axiosinstance";
 
-
+// ---------------------------------ORDER----------------------------------
 //Them don hang
-export const addOrder = async (orderDate, totalPrice, status, idUser) => {
-    return await CustomAxios().post("order/api/create", { orderDate, totalPrice, status, idUser });
+export const addOrder = async (orderDate, totalPrice, status, quantity, idUser) => {
+    return await CustomAxios().post("order/api/create-order", { orderDate, totalPrice, status, quantity, idUser });
 };
-
 
 //Lay order theo idUser
 export const get_order_by_idUser = async (_idUser) => {
@@ -18,10 +17,11 @@ export const get_order_by_id = async (_idOrder) => {
 };
 
 // Lay order theo idUser va status
-export const get_order_by_idUser_and_status = async (_idUser, _status) => {
-    return await CustomAxios().get("order/api/get-order-by-idUser-and-status/" + _idUser + "/" + _status);
+export const get_order_by_idUser_and_status = async (idUser, status) => {
+    return await CustomAxios().get("order/api/get-order-by-idUser-and-status/" + idUser + "/" + status);
 };
 
+// ---------------------------------PRODUCT----------------------------------
 //Lay danh sach san pham
 export const getProducts = async () => {
     return await CustomAxios().get("product/api/get-products");
@@ -51,6 +51,7 @@ export const delete_order_detail = async (_id) => {
     return await CustomAxios().get("order_detail/api/delete-order_detail/" + _id);
 };
 
+//------------------------------------ORDER_DETAIL----------------------------------
 //Update order detail
 export const update_order_detail = async (_id, totalPrice, amount, idOrder, idProduct) => {
     return await CustomAxios().post("order_detail/api/update-order_detail/" + _id,
@@ -62,6 +63,10 @@ export const update_order_detail = async (_id, totalPrice, amount, idOrder, idPr
 export const get_order_details_by_idOrder = async (_idOrder) => {
     return await CustomAxios().get("order_detail/api/get-order_detail-by-idOrder/" + _idOrder);
 };
+
+
+
+
 
 
 

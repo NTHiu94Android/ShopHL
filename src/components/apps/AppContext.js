@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react'
 import { 
-  addOrder, addToCart, delete_order_detail, getProducts, get_order_by_id, get_order_by_idUser, get_order_by_idUser_and_status, 
+  addOrder, addToCart, delete_order_detail, getProducts, get_order_by_id, 
+  get_order_by_idUser, get_order_by_idUser_and_status, 
   get_order_details_by_idOrder, get_product_by_id, update_order_detail 
 } from './AppService';
 import { UserContext } from '../users/UserContext';
@@ -12,10 +13,16 @@ export const AppContextProvider = (props) => {
   const {user} = useContext(UserContext);
   const [listCart, setListCart] = useState([]);
   const [listFavorite, setListFavorite] = useState([]);
+  const [listOrder, setListOrder] = useState([]);
+  const [listProcessing, setListProcessing] = useState([]);
+  const [listDelivered, setListDelivered] = useState([]);
+  const [listCanceled, setListCanceled] = useState([]);
   const [countCart, setCountCart] = useState(0);
   const [countFavorite, setCountFavorite] = useState(0);
   const [total, setTotal] = useState(0);
+  const [ship, setShip] = useState(5);
 
+  //-----------------------PRODUCT-------------------------
   //Lay danh sach san pham
   const onGetProducts = async () => {
     try {
@@ -50,6 +57,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  //------------------------------ORDER DETAIL------------------------------
   //Them san pham vao gio hang
   const onAddToCart = async (totalPrice, amount, idOrder, idProduct) => {
     try {
@@ -98,10 +106,23 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  //Them don hang
-  const onAddOrder = async (orderDate, totalPrice, status, idUser) => {
+   //Lay danh sach chi tiet don hang theo idOrder
+   const onGetOrderDetailsByIdOrder = async (idOrder) => {
     try {
-      const respone = await addOrder(orderDate, totalPrice, status, idUser);
+      const orderDetail = await get_order_details_by_idOrder(idOrder);
+      //console.log("OnGetOrderDetailByIdOrder Response: ", orderDetail.data);
+      return orderDetail.data;
+    } catch (error) {
+      console.log("OnGetOrderDetailByIdOrder Error: ", error);
+    }
+  };
+
+
+  //------------------------------ORDER------------------------------
+  //Them don hang
+  const onAddOrder = async (orderDate, totalPrice, status, quantity, idUser) => {
+    try {
+      const respone = await addOrder(orderDate, totalPrice, status, quantity, idUser);
       console.log("Add order: ", respone.data);
       return respone.data;
     } catch (error) {
@@ -109,6 +130,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  //Lay danh sach don hang theo idUser
   const onGetOrdersByIdUser = async () => {
     try {
       const order = await get_order_by_idUser(user._id);
@@ -119,6 +141,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  //Lay danh sach don hang theo id
   const onGetOrderById = async (idOrder) => {
     try {
       const order = await get_order_by_id(idOrder);
@@ -129,13 +152,14 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  const onGetOrderDetailsByIdOrder = async (idOrder) => {
+  //Lay don hang theo idUser va status
+  const onGetOrderByIdUserAndStatus = async (idUser, status) => {
     try {
-      const orderDetail = await get_order_details_by_idOrder(idOrder);
-      //console.log("OnGetOrderDetailByIdOrder Response: ", orderDetail.data);
-      return orderDetail.data;
+      const order = await get_order_by_idUser_and_status(idUser, status);
+      console.log("OnGetOrderByIdUserAndStatus Response: ", order.data);
+      return order.data;
     } catch (error) {
-      console.log("OnGetOrderDetailByIdOrder Error: ", error);
+      console.log("OnGetOrderByIdUserAndStatus Error: ", error);
     }
   };
 
@@ -146,7 +170,8 @@ export const AppContextProvider = (props) => {
       onGetOrderDetailsByIdOrder, onGetProductById, countCart, setCountCart,
       countFavorite, setCountFavorite, onGetProductsByBrand,
       listFavorite, setListFavorite, onDeleteOrderDetail, onUpdateOrderDetail,
-      total, setTotal
+      total, setTotal, ship, setShip, listOrder, setListOrder, onGetOrderByIdUserAndStatus,
+      listProcessing, setListProcessing
     }}>
       {children}
     </AppContext.Provider>

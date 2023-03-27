@@ -18,7 +18,6 @@ const Cart = (props) => {
   useEffect(() => {
     const getListCart = async () => {
       try {
-        let sum = 0;
         const response = await onGetOrderDetailsByIdOrder(user.cart);
         if (!response) return;
         //console.log("List cart: ", response);
@@ -32,9 +31,7 @@ const Cart = (props) => {
           response[i].prodName = product.name;
           response[i].totalPrice = product.price * response[i].amount;
           response[i].price = product.price;
-          sum += response[i].price;
         }
-        setTotal(sum);
         setListCart(response);
 
       } catch (error) {
