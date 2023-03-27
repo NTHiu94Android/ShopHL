@@ -1,7 +1,97 @@
 import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 
-const Favorite = () => {
+import { AppContext } from '../../AppContext';
+import { UserContext } from '../../../users/UserContext';
+
+const Favorite = (props) => {
+  const { navigation } = props;
+  const { user } = useContext(UserContext);
+  const {
+    onGetOrderDetailsByIdOrder, listFavorite,
+    setListFavorite, onGetProductById, countFavorite, setCountCart, countCart,
+    onDeleteOrderDetail, onUpdateOrderDetail, total, setTotal, setListCart
+  } = useContext(AppContext);
+  //Lay danh sach san phma trong gio hang
+  useEffect(() => {
+    const getListfavorite = async () => {
+      try {
+        const response = await onGetOrderDetailsByIdOrder(user.favorite);
+        if (!response) return;
+        //console.log("List favorite: ", response);
+        for (let i = 0; i < response.length; i++) {
+          const productId = response[i].idProduct;
+          //console.log("Product id: ", productId);
+          const product = await onGetProductById(productId);
+          console.log("Product favorite: ", product);
+          response[i].image = product.listImage[0];
+          //console.log("Product image: ", product.listImage[0]); 
+          response[i].name = product.name;
+          response[i].price = product.price;
+        }
+        setListFavorite(response);
+      } catch (error) {
+        console.log("Get list favorite error: ", error);
+      }
+    };
+    getListfavorite();
+  }, [countFavorite]);
+
+  //Them tat ca san pham yeu thich vao gio hang
+  const addAllToCart = async () => {
+    try {
+      if (listFavorite.length === 0) return;
+      let sum = 0;
+      for (let i = 0; i < listFavorite.length; i++) {
+        //Cap nhat idOder tu idFavorite sang idCart
+        const cartItem = await onUpdateOrderDetail(
+          listFavorite[i]._id, listFavorite[i].totalPrice,
+          listFavorite[i].amount, user.cart,
+          listFavorite[i].idProduct
+        );
+        sum = sum + listFavorite[i].totalPrice;
+        //console.log("Add to cart: ", response);
+      }
+      setCountCart(countCart + 1);
+      // setCountFavorite(countFavorite - 1);
+      setTotal(total + sum);
+      setListFavorite([]);
+      navigation.navigate('Cart');
+    } catch (error) {
+      console.log("Add to cart error: ", error);
+    }
+  };
+
+  const deleteFavoriteItem = async (idOrderDetail) => {
+    try {
+      const response = await onDeleteOrderDetail(idOrderDetail);
+      console.log("Delete favorite item: ", response);
+    } catch (error) {
+      console.log("Delete favorite item error: ", error);
+    }
+  };
+
+  const addOneToCart = async (it) => {
+    try {
+      //Cap nhat idOder tu idFavorite sang idCart
+      const itemToCart = listFavorite.find(item => item._id === it._id);
+      itemToCart.idOrder = user.cart;
+      setListCart(current => [...current, itemToCart]);
+      console.log("itemToCart: ", itemToCart);
+      setCountCart(countCart + 1);
+      setTotal(total + itemToCart.totalPrice);
+
+      //Xoa san pham khoi danh sach yeu thich
+      const listNew = listFavorite.filter(item => item._id !== it._id);
+      setListFavorite(listNew);
+      //console.log("listNew: ", listNew);
+
+      //Cap nhat tren database
+      await onUpdateOrderDetail(itemToCart._id, itemToCart.totalPrice, itemToCart.amount, user.cart, itemToCart.idProduct);
+    } catch (error) {
+      console.log("Add 1 to cart fail: ", error);
+    }
+  };
 
   return (
     <View style={{ position: 'relative', flex: 1, backgroundColor: 'white' }}>
@@ -10,13 +100,28 @@ const Favorite = () => {
         <Text style={styles.h1}>Favorites</Text>
         <Image source={require('../../../../assets/images/Cart.png')} style={styles.Icon} />
       </View>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Add all to my cart</Text>
-      </TouchableOpacity>
+      {
+        listFavorite.length !== 0 ?
+          <TouchableOpacity onPress={() => addAllToCart()} style={styles.button}>
+            <Text style={styles.buttonText}>Add all to my cart</Text>
+          </TouchableOpacity> :
+          <View style={[styles.button, {backgroundColor: '#BBB'}]}>
+            <Text style={styles.buttonText}>Add all to my cart</Text>
+          </View>
+      }
+
       <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        data={listFavorite}
+        renderItem={({ item }) =>
+          <Item
+            addOneToCart={() => addOneToCart(item)}
+            deleteFavoriteItem={() => deleteFavoriteItem(item._id)}
+            name={item.name}
+            image={item.image}
+            price={item.price} />
+        }
+        showsVerticalScrollIndicator={false}
+        keyExtractor={item => item._id}
       />
 
     </View>
@@ -51,14 +156,14 @@ const styles = StyleSheet.create({
     marginVertical: 0,
     padding: 10,
     paddingVertical: 20,
-    marginHorizontal: 20,
-    borderTopWidth: 0.5,
+    borderBottomWidth: 0.5,
     borderRadius: 20,
     borderColor: 'rgba(0, 0, 0, 0.2)',
+
   },
   imgLst: {
-    width: 100,
-    height: 100,
+    width: 70,
+    height: 70,
     borderRadius: 10,
   },
   listItemName: {
@@ -101,21 +206,25 @@ const styles = StyleSheet.create({
 
 })
 
-const renderItem = ({ item }) => {
+const Item = ({ name, price, image, deleteFavoriteItem, addOneToCart }) => {
   return (
     <View style={styles.listItem}>
-      <Image source={require('../../../../assets/images/Iphone14.png')} style={styles.imgLst} />
+      <Image source={{ uri: image }} style={styles.imgLst} />
       <View style={styles.listItemName}>
-        <Text style={styles.TextlstName}>{item.name}</Text>
-        <Text style={styles.TextlstPrice}>$ {item.price}</Text>
+        <Text style={styles.TextlstName}>{name}</Text>
+        <Text style={styles.TextlstPrice}>$ {price}</Text>
       </View>
       <View style={styles.listItemIcon}>
-        <View style={{ alignSelf: 'flex-start', width: '100%', alignItems: 'center' }}>
-          <Image source={require('../../../../assets/images/del.png')} style={{ width: 30, height: 30 }} />
-        </View>
-        <View style={{ alignSelf: 'flex-start', width: '100%', alignItems: 'center' }}>
-          <Image source={require('../../../../assets/images/shop.png')} style={{ width: 30, height: 30 }} />
-        </View>
+        <TouchableOpacity onPress={deleteFavoriteItem}>
+          <View style={{ alignSelf: 'flex-start', width: '100%', alignItems: 'center' }}>
+            <Image source={require('../../../../assets/images/del.png')} style={{ width: 30, height: 30 }} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={addOneToCart}>
+          <View style={{ alignSelf: 'flex-start', width: '100%', alignItems: 'center' }}>
+            <Image source={require('../../../../assets/images/shop.png')} style={{ width: 30, height: 30 }} />
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
 

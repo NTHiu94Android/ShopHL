@@ -1,11 +1,14 @@
 import { Button, Pressable, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, {useContext} from 'react'
 import styleAddShippingAddress from '../../../style/styleAddShippingAddress'
 import back from '../../../backEvent/back';
+import { UserContext } from '../../../users/UserContext';
+import { AppContext } from '../../AppContext';
 
 const Shipping = (props) => {
   const { navigation } = props;
-
+  const {user} = useContext(UserContext);
+  const {total} = useContext(AppContext);
   back(navigation);
   return (
     <View style={{ flex: 1, backgroundColor: '#000000' }}>
@@ -27,11 +30,11 @@ const Shipping = (props) => {
         <View style={styleAddShippingAddress.body}>
           <View style={styleAddShippingAddress.viewFullName}>
             <Text style={styleAddShippingAddress.txtFullName}>Full name</Text>
-            <Text style={styleAddShippingAddress.txtExFullName}>Ex: Phạm Quốc Tín</Text>
+            <Text style={styleAddShippingAddress.txtExFullName}>Ex: {user.name}</Text>
           </View>
           <View style={styleAddShippingAddress.viewFullName}>
             <Text style={styleAddShippingAddress.txtFullName}>Address</Text>
-            <Text style={styleAddShippingAddress.txtExFullName}>Ex: 25 Robert Latouche Street</Text>
+            <Text style={styleAddShippingAddress.txtExFullName}>Ex: {user.address}</Text>
           </View>
           <View style={styleAddShippingAddress.viewZipcode}>
             <Text style={styleAddShippingAddress.txtFullName}>Zipcode (Postal Code)</Text>
