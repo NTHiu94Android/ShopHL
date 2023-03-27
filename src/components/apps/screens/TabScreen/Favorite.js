@@ -9,14 +9,15 @@ const Favorite = (props) => {
   const { user } = useContext(UserContext);
   const {
     onGetOrderDetailsByIdOrder, listFavorite,
-    setListFavorite, onGetProductById, countFavorite,
-    onDeleteOrderDetail
+    setListFavorite, onGetProductById, countFavorite, setCountCart, countCart,
+    onDeleteOrderDetail, onUpdateOrderDetail, total, setTotal
   } = useContext(AppContext);
   //Lay danh sach san phma trong gio hang
   useEffect(() => {
     const getListfavorite = async () => {
       try {
         const response = await onGetOrderDetailsByIdOrder(user.favorite);
+        if (!response) return;
         //console.log("List favorite: ", response);
         for (let i = 0; i < response.length; i++) {
           const productId = response[i].idProduct;
@@ -36,15 +37,29 @@ const Favorite = (props) => {
     getListfavorite();
   }, [countFavorite]);
 
+  //Them tat ca san pham yeu thich vao gio hang
   const addAllToCart = async () => {
-    // try {
-    //   for (let i = 0; i < listFavorite.length; i++) {
-    //     const response = await onAddToCart(listFavorite[i].idProduct, 1);
-    //     console.log("Add to cart: ", response);
-    //   }
-    // } catch (error) {
-    //   console.log("Add to cart error: ", error);
-    // }
+    try {
+      if (listFavorite.length === 0) return;
+      let sum = 0;
+      for (let i = 0; i < listFavorite.length; i++) {
+        //Cap nhat idOder tu idFavorite sang idCart
+        const cartItem = await onUpdateOrderDetail(
+          listFavorite[i]._id, listFavorite[i].totalPrice,
+          listFavorite[i].amount, user.cart,
+          listFavorite[i].idProduct
+        );
+        sum = sum + listFavorite[i].totalPrice;
+        //console.log("Add to cart: ", response);
+      }
+      setCountCart(countCart + 1);
+      // setCountFavorite(countFavorite - 1);
+      setTotal(total + sum);
+      setListFavorite([]);
+      navigation.navigate('Cart');
+    } catch (error) {
+      console.log("Add to cart error: ", error);
+    }
   };
 
   const deleteFavoriteItem = async (idOrderDetail) => {
@@ -63,9 +78,16 @@ const Favorite = (props) => {
         <Text style={styles.h1}>Favorites</Text>
         <Image source={require('../../../../assets/images/Cart.png')} style={styles.Icon} />
       </View>
-      <TouchableOpacity onPress={() => addAllToCart()} style={styles.button}>
-        <Text style={styles.buttonText}>Add all to my cart</Text>
-      </TouchableOpacity>
+      {
+        listFavorite.length !== 0 ?
+          <TouchableOpacity onPress={() => addAllToCart()} style={styles.button}>
+            <Text style={styles.buttonText}>Add all to my cart</Text>
+          </TouchableOpacity> :
+          <View style={[styles.button, {backgroundColor: '#BBB'}]}>
+            <Text style={styles.buttonText}>Add all to my cart</Text>
+          </View>
+      }
+
       <FlatList
         data={listFavorite}
         renderItem={({ item }) =>
@@ -113,7 +135,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderRadius: 20,
     borderColor: 'rgba(0, 0, 0, 0.2)',
-    
+
   },
   imgLst: {
     width: 70,
@@ -124,7 +146,7 @@ const styles = StyleSheet.create({
     flex: 5,
     paddingStart: 20,
   },
-  TextlstName: { 
+  TextlstName: {
     fontWeight: 'normal',
     fontSize: 14,
     fontWeight: '400',

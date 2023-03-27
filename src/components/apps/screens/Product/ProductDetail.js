@@ -6,7 +6,10 @@ import { UserContext } from '../../../users/UserContext';
 
 const ProductDetail = ({ route, navigation }) => {
   const { item } = route.params;
-  const {onAddToCart, onAddToFavorite, listCart, setListCart, listFavorite, setListFavorite} = useContext(AppContext);
+  const {onAddToCart, onAddToFavorite, setListCart, 
+    setListFavorite, setCountCart, countCart,
+    total, setTotal
+  } = useContext(AppContext);
   const {user} = useContext(UserContext);
   const [count, setCount] = useState(1);
   
@@ -33,6 +36,10 @@ const ProductDetail = ({ route, navigation }) => {
       const order_detail = await onAddToCart(totalPrice, amount, idOrder, idProduct);
       console.log("Add to cart: ", order_detail);
       setListCart(current => [...current, order_detail]);
+      setCountCart(countCart + 1);
+      console.log("Total: ", total);
+      console.log("Total price: ", totalPrice + total);
+      setTotal(total + totalPrice);
       navigation.navigate('Cart');
     } catch (error) {
       console.log("Add to cart error: ", error);
@@ -42,8 +49,8 @@ const ProductDetail = ({ route, navigation }) => {
   //Them san pham vao favorite
   const addToFavorite = async () => {
     try {
-      const totalPrice = item.price * count;
-      const amount = count;
+      const totalPrice = item.price;
+      const amount = 1;
       const idOrder = user.favorite;
       const idProduct = item._id;
       const order_detail = await onAddToFavorite(totalPrice, amount, idOrder, idProduct);

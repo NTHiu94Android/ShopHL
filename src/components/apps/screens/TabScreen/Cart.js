@@ -1,25 +1,26 @@
-import { FlatList, Image, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, alert } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { Entypo, AntDesign } from '@expo/vector-icons';
 import { AppContext } from '../../AppContext';
 import { UserContext } from '../../../users/UserContext';
-
+ 
 const Cart = (props) => {
   const { navigation } = props;
   const { user } = useContext(UserContext);
   const {
     onGetOrderDetailsByIdOrder, listCart, setListCart, onGetProductById,
-    countCart, setCountCart, onUpdateOrderDetail, onDeleteOrderDetail
+    countCart, onUpdateOrderDetail, onDeleteOrderDetail,
+    total, setTotal
   } = useContext(AppContext);
 
-  const [total, setTotal] = useState(0);
 
   //Lay danh sach san phma trong gio hang
   useEffect(() => {
-    const getListCart = async () => { 
+    const getListCart = async () => {
       try {
         let sum = 0;
         const response = await onGetOrderDetailsByIdOrder(user.cart);
+        if (!response) return;
         //console.log("List cart: ", response);
         for (let i = 0; i < response.length; i++) {
           const productId = response[i].idProduct;
@@ -33,13 +34,14 @@ const Cart = (props) => {
           response[i].price = product.price;
           sum += response[i].price;
         }
-        setTotal(sum); 
+        setTotal(sum);
         setListCart(response);
+
       } catch (error) {
         console.log("Get list cart error: ", error);
       }
     };
-    getListCart(); 
+    getListCart();
   }, [countCart]);
 
   // useEffect(() => {
@@ -48,16 +50,35 @@ const Cart = (props) => {
 
   const updateItemCart = async (_idOrderDetail, _totalPrice, _amount, _idOrder, _idProduct) => {
     try {
+      const product = await onGetProductById(_idProduct);
+      if (product.amount < _amount) {
+        alert("Số lượng sản phẩm trong kho không đủ!");
+        return;
+      }
       const response = await onUpdateOrderDetail(_idOrderDetail, _totalPrice, _amount, _idOrder, _idProduct);
-      console.log("Update item cart: ", response);
-      setCountCart(countCart + 1);
+      console.log("Update item cart: ", response.amount + " ... " + response.totalPrice);
+      //setCountCart(countCart + 1);
     } catch (error) {
       console.log("Update item cart error: ", error);
     }
   };
 
   const updateItem = (id, newValue) => {
-    const newItems = listCart.map(item => { 
+    //Cap nhat tren giao dien 
+    let sum = 0;
+    const newItems2 = listCart.map(item => {
+      if (item._id === id) {
+        item.amount = newValue;
+        item.totalPrice = item.price * newValue;
+      }
+      sum += item.totalPrice;
+      return item;
+    });
+    setTotal(sum);
+    setListCart(newItems2);
+
+    //Cap nhat tren server mongodb
+    listCart.map(item => {
       if (item._id === id) {
         const itemNew = { ...item, amount: newValue, totalPrice: item.price * newValue };
         console.log(">>>>>>>>>>>>TotalPrice: ", itemNew.price * itemNew.amount);
@@ -65,16 +86,27 @@ const Cart = (props) => {
       }
       return item;
     });
-    setListCart(newItems);
   };
 
   const deleteItem = async (id) => {
     const newItems = listCart.filter(item => item._id !== id);
+    console.log("Delete item cart: ", newItems);
+    if(newItems.length === 0) {
+      setTotal(0);
+    }else{
+      let sum = 0;
+      newItems.map(item => {
+        sum += item.totalPrice;
+        return item;
+      });
+      setTotal(sum);
+    }
     setListCart(newItems);
+    //setTotal(total - listCart.find(item => item._id === id).totalPrice);
     const res = await onDeleteOrderDetail(id);
     console.log("Delete item cart: ", res);
   };
-  
+
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -88,26 +120,34 @@ const Cart = (props) => {
               <Item
                 deleteItem={() => deleteItem(item._id)}
                 plus={() => updateItem(item._id, item.amount + 1)}
-                minus={() => updateItem(item._id, item.amount > 1 ? item.amount - 1 : 1)} 
+                minus={() => updateItem(item._id, item.amount > 1 ? item.amount - 1 : 1)}
                 item={item} />
             }
             keyExtractor={item => item._id}
-          />  
+          />
         </SafeAreaView>
-        <View style={{ height: 150, justifyContent: 'space-between' }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#ffff', borderRadius: 10, paddingStart: 11 }}>
-            <TextInput>Enter your promo code</TextInput>
-            <AntDesign name="rightsquare" size={44} color="black" />
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
-            <Text style={{ fontSize: 20 }}>Total:</Text>
-            <Text style={{ fontSize: 20 }}>$ {total}</Text>
-          </View>
-          <TouchableOpacity onPress={() => navigation.navigate("CheckOut")} style={{ backgroundColor: '#000', height: 60, borderRadius: 8, flexDirection: 'column', justifyContent: 'center' }}>
-            <Text style={{ color: '#fff', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Check out</Text>
-            {/* Bấm đây nhảy qua check out */}
-          </TouchableOpacity>
-        </View>
+
+        {
+          listCart.length !== 0 ?
+            <View style={{ height: 150, justifyContent: 'space-between' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#ffff', borderRadius: 10, paddingStart: 11 }}>
+                <TextInput>Enter your promo code</TextInput>
+                <AntDesign name="rightsquare" size={44} color="black" />
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
+                <Text style={{ fontSize: 20 }}>Total:</Text>
+                <Text style={{ fontSize: 20 }}>$ {total}</Text>
+              </View>
+
+              <TouchableOpacity onPress={() => navigation.navigate("CheckOut")} style={{ backgroundColor: '#000', height: 60, borderRadius: 8, flexDirection: 'column', justifyContent: 'center' }}>
+                <Text style={{ color: '#fff', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Check out</Text>
+                {/* Bấm đây nhảy qua check out */}
+              </TouchableOpacity>
+            </View> :
+            <View style={{ backgroundColor: '#BBB', height: 60, borderRadius: 8, flexDirection: 'column', justifyContent: 'center' }}>
+              <Text style={{ color: '#fff', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Check out</Text>
+            </View>
+        }
       </View>
     </View>
   )
@@ -115,9 +155,9 @@ const Cart = (props) => {
 
 export default Cart
 
-const Item = ({item, plus, minus, deleteItem}) => (
-  
-  <View style={styles.item}> 
+const Item = ({ item, plus, minus, deleteItem }) => (
+
+  <View style={styles.item}>
     <View style={{ flexDirection: 'row' }}>
       <Image source={{ uri: item.imageurl }} style={styles.image} />
       <View style={{ justifyContent: 'space-between', paddingVertical: 5, paddingStart: 10 }}>

@@ -14,6 +14,7 @@ export const AppContextProvider = (props) => {
   const [listFavorite, setListFavorite] = useState([]);
   const [countCart, setCountCart] = useState(0);
   const [countFavorite, setCountFavorite] = useState(0);
+  const [total, setTotal] = useState(0);
 
   //Lay danh sach san pham
   const onGetProducts = async () => {
@@ -37,12 +38,24 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  //Lay danh sach san pham theo brand
+  const onGetProductsByBrand = async (brand) => {
+    try {
+      const products = await getProducts();
+      const productsByBrand = products.data.filter((product) => product.brand === brand);
+      //console.log("OnGetProductsByBrand Response: ", productsByBrand);
+      return productsByBrand;
+    } catch (error) {
+      console.log("OnGetProductsByBrand Error: ", error);
+    }
+  };
+
   //Them san pham vao gio hang
   const onAddToCart = async (totalPrice, amount, idOrder, idProduct) => {
     try {
       const respone = await addToCart(totalPrice, amount, idOrder, idProduct);
       //console.log("Add to cart: ", respone.data);
-      setCountCart(countCart + 1);
+      //setCountCart(countCart + 1);
       return respone.data;
     } catch (error) {
       console.log("Add to cart error: ", error);
@@ -66,7 +79,7 @@ export const AppContextProvider = (props) => {
     try {
       const respone = await delete_order_detail(idOrderDetail);
       //console.log("Delete cart: ", respone.data);
-      setCountCart(countCart - 1);
+      //setCountCart(countCart - 1);
       setCountFavorite(countFavorite - 1);
       return respone.data;
     } catch (error) {
@@ -131,8 +144,9 @@ export const AppContextProvider = (props) => {
       onGetProducts, onAddToCart, onAddToFavorite, onAddOrder,
       listCart, setListCart, onGetOrdersByIdUser, onGetOrderById,
       onGetOrderDetailsByIdOrder, onGetProductById, countCart, setCountCart,
-      countFavorite, setCountFavorite,
-      listFavorite, setListFavorite, onDeleteOrderDetail, onUpdateOrderDetail
+      countFavorite, setCountFavorite, onGetProductsByBrand,
+      listFavorite, setListFavorite, onDeleteOrderDetail, onUpdateOrderDetail,
+      total, setTotal
     }}>
       {children}
     </AppContext.Provider>

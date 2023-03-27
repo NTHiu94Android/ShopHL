@@ -9,7 +9,7 @@ const Item = ({ item, onPress }) => (
                 <Image
                     style={{ width: '98%', height: 150, position: 'relative', borderRadius: 10 }}
                     resizeMode='cover'
-                    source={{ uri: item.listImage[0], }} /> 
+                    source={{ uri: item.listImage[0], }} />
                 <Image
                     style={{ width: 35, height: 35, position: 'absolute', right: 13, bottom: 60 }}
                     resizeMode='cover'
@@ -26,7 +26,7 @@ const Item = ({ item, onPress }) => (
 
 const Home = (props) => {
     const { navigation } = props;
-    const { onGetProducts } = useContext(AppContext);
+    const { onGetProducts, onGetProductsByBrand } = useContext(AppContext);
     const [listProduct, setListProduct] = useState([]);
     //const [selectedId, setSelectedId] = useState('');
     // const listData = [
@@ -106,15 +106,20 @@ const Home = (props) => {
     // ];
 
     useEffect(() => {
-        const getData = async () => {
-            const list = await onGetProducts();
-            //console.log(list);
-            setListProduct(list);
-        };
         getData();
     }, []);
 
+    const getData = async () => {
+        const list = await onGetProducts();
+        //console.log(list);
+        setListProduct(list);
+    };
 
+    const getProductsByBrand = async (brand) => {
+        const list = await onGetProductsByBrand(brand);
+        //console.log(list);
+        setListProduct(list);
+    };
     // const selectedItem = (item) => {
     //     setSelectedId(item._id);
     //     navigation.navigate('ProductDetail', { item: item });
@@ -136,10 +141,15 @@ const Home = (props) => {
                             style={{ width: 24, height: 24 }}
                             resizeMode='cover'
                             source={require('../../../../assets/images/ic_search.png')} />
-                        <Image
-                            style={{ width: 50, height: 50 }}
-                            resizeMode='cover'
-                            source={require('../../../../assets/images/ic_profile2.png')} />
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: 150, height: 50}}>
+                            <Text style={{color: 'black', fontWeight: '800', fontSize: 16}}>Hoang</Text>
+                            <Image
+                                style={{ width: 50, height: 50 }}
+                                resizeMode='cover'
+                                source={require('../../../../assets/images/ic_profile2.png')} />
+                            <Text style={{color: 'black', fontWeight: '800', fontSize: 16}}>Long</Text>
+                        </View>
+
                         <Image
                             style={{ width: 24, height: 24 }}
                             resizeMode='cover'
@@ -147,56 +157,85 @@ const Home = (props) => {
                     </View>
 
                     <ScrollView showsVerticalScrollIndicator={false}>
-                        <ScrollView style={{ marginVertical: 12, height: 90 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-                            <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                <Image
-                                    style={{ width: 35, height: 40 }}
-                                    resizeMode='cover'
-                                    source={require('../../../../assets/images/ic_ip.png')} />
-                                <Text>Iphone</Text>
-                            </View>
-                            <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                <Image
-                                    style={{ width: 55, height: 40 }}
-                                    resizeMode='cover'
-                                    source={require('../../../../assets/images/logo_samsung.png')} />
-                                <Text>Samsung</Text>
-                            </View>
-                            <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                <Image
-                                    style={{ width: 35, height: 40, marginHorizontal: 8, borderRadius: 8 }}
-                                    resizeMode='cover'
-                                    source={require('../../../../assets/images/ic_xiomi.png')} />
-                                <Text>Xiaomi</Text>
-                            </View>
-                            <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                <Image
-                                    style={{ width: 35, height: 40 }}
-                                    resizeMode='cover'
-                                    source={require('../../../../assets/images/ic_ip.png')} />
-                                <Text>Iphone</Text>
-                            </View>
-                            <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                <Image
-                                    style={{ width: 55, height: 40 }}
-                                    resizeMode='cover'
-                                    source={require('../../../../assets/images/logo_samsung.png')} />
-                                <Text>Samsung</Text>
-                            </View>
-                            <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                <Image
-                                    style={{ width: 35, height: 40, marginHorizontal: 8, borderRadius: 8 }}
-                                    resizeMode='cover'
-                                    source={require('../../../../assets/images/ic_xiomi.png')} />
-                                <Text>Xiaomi</Text>
-                            </View>
-                            <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                <Image
-                                    style={{ width: 35, height: 40 }}
-                                    resizeMode='cover'
-                                    source={require('../../../../assets/images/ic_ip.png')} />
-                                <Text>Iphone</Text>
-                            </View>
+                        <ScrollView style={{ marginTop: 12, height: 70, }} horizontal={true} showsHorizontalScrollIndicator={false}>
+                            {/* All */}
+                            <TouchableOpacity onPress={() => getData()}>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 40, height: 45, marginBottom: 0 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/ic_all.png')} />
+                                    <Text>All</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {/* Apple */}
+                            <TouchableOpacity onPress={() => getProductsByBrand('apple')}>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 40, height: 40, marginBottom: 5 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/ic_ip.png')} />
+                                    <Text>Apple</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {/* Samsung */}
+                            <TouchableOpacity onPress={() => getProductsByBrand('samsung')}>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 55, height: 40, marginBottom: 5 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/logo_samsung.png')} />
+                                    <Text>Samsung</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {/* Xiaomi */}
+                            <TouchableOpacity onPress={() => getProductsByBrand('xiaomi')}>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 40, height: 40, marginHorizontal: 8, borderRadius: 8, marginBottom: 5 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/ic_xiomi.png')} />
+                                    <Text>Xiaomi</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {/* Huawei */}
+                            <TouchableOpacity>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 40, height: 40, marginBottom: 5 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/ic_huawei.png')} />
+                                    <Text>Huawei</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {/* asus */}
+                            <TouchableOpacity>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 40, height: 40, marginBottom: 5 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/ic_asus.png')} />
+                                    <Text>Asus</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {/* Vivo */}
+                            <TouchableOpacity>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 55, height: 40, marginBottom: 5 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/ic_vivo.png')} />
+                                    <Text>Vivo</Text>
+                                </View>
+                            </TouchableOpacity>
+
+
 
                         </ScrollView>
                         <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
@@ -244,7 +283,7 @@ const styles = StyleSheet.create({
             width: 1,
             height: 3
         },
-        backgroundColor: 'white', 
+        backgroundColor: 'white',
         shadowRadius: 5,
         shadowOpacity: 0.3
     },
