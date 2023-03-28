@@ -25,6 +25,7 @@ const Setting = (props) => {
                   resizeMode="cover"></Image>
               </TouchableOpacity>
               <Text style={styleSetting.txtOrderDetail}>Setting</Text>
+              <Text style={styleSetting.txtOrderDetail2}></Text>
             </View>
             <View style={styleSetting.viewPersonalInformation}>
               <Text style={styleSetting.txtPersonalInformation}>Personal Information</Text>

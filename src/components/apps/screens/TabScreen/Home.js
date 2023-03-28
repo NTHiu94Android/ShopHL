@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, TextInput, ScrollView, Pressable, onSearch } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Modal } from 'react-native'
 import React, { useState, useContext, useEffect } from 'react'
 import { AppContext } from '../../../apps/AppContext';
+import ProductSortDialog from '../Product/ProductSortDialog';
 
 const Item = ({ item, onPress }) => (
     <TouchableOpacity style={{ flexWrap: 'wrap', width: '49%', marginBottom: 10 }} onPress={onPress}>
@@ -28,82 +29,7 @@ const Home = (props) => {
     const { navigation } = props;
     const { onGetProducts, onGetProductsByBrand } = useContext(AppContext);
     const [listProduct, setListProduct] = useState([]);
-    //const [selectedId, setSelectedId] = useState('');
-    // const listData = [
-    //     {
-    //         _id: "1",
-    //         field: "SamSung S20",
-    //         price: "$25",
-    //         description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-    //         link: "https://cdn.tgdd.vn/Products/Images/42/217937/samsung-galaxy-s20-ultra-600x600-1-600x600.jpg",
-    //         reviews: "4.5",
-    //         status_review: "(50 reviews)",
-    //     },
-    //     {
-    //         _id: "2",
-    //         field: "Iphone 14",
-    //         price: "$25",
-    //         description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-    //         link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-    //         reviews: "4.5",
-    //         status_review: "(50 reviews)",
-    //     },
-    //     {
-    //         _id: "3",
-    //         field: "Iphone 14",
-    //         price: "$25",
-    //         description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-    //         link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-    //         reviews: "4.5",
-    //         status_review: "(50 reviews)",
-    //     },
-    //     {
-    //         _id: "4",
-    //         field: "Iphone 14",
-    //         price: "$25",
-    //         description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-    //         link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-    //         reviews: "4.5",
-    //         status_review: "(50 reviews)",
-    //     },
-    //     {
-    //         _id: "5",
-    //         field: "Iphone 14",
-    //         price: "$25",
-    //         description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-    //         link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-    //         reviews: "4.5",
-    //         status_review: "(50 reviews)",
-    //     },
-    //     {
-    //         _id: "6",
-    //         field: "Iphone 14",
-    //         price: "$25",
-    //         description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-    //         link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-    //         reviews: "4.5",
-    //         status_review: "(50 reviews)",
-    //     },
-
-    //     {
-    //         _id: "7",
-    //         field: "Iphone 14",
-    //         price: "$25",
-    //         description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-    //         link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-    //         reviews: "4.5",
-    //         status_review: "(50 reviews)",
-    //     },
-    //     {
-    //         _id: "8",
-    //         field: "Iphone 14",
-    //         price: "$25",
-    //         description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-    //         link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-    //         reviews: "4.5",
-    //         status_review: "(50 reviews)",
-    //     },
-    // ];
+    const [visibleSort, setVisibleSort] = useState(false);
 
     useEffect(() => {
         getData();
@@ -120,17 +46,28 @@ const Home = (props) => {
         //console.log(list);
         setListProduct(list);
     };
-    // const selectedItem = (item) => {
-    //     setSelectedId(item._id);
-    //     navigation.navigate('ProductDetail', { item: item });
-    // };
-    // const renderItem = ({ item }) => {
-    //     return (
-    //         <Item
-    //             item={item}
-    //             onPress={() => selectedItem(item)} />
-    //     )
-    // }
+
+    const showDialogSort = () => {
+        setVisibleSort(true);
+    };
+
+    const onSort = (sort) => {
+        setVisibleSort(false);
+        console.log(sort);
+        if(sort === 'down'){
+            const sortedProducts = listProduct.sort((a, b) => b.price - a.price);
+            setListProduct(sortedProducts);
+        }else if(sort === 'up'){
+            const sortedProducts = listProduct.sort((a, b) => a.price - b.price);
+            setListProduct(sortedProducts);
+        }
+        // }else if(sort === 'rate'){
+        //     const sortedProducts = listProduct.sort((a, b) => a.reviews - b.reviews);
+        //     setListProduct(sortedProducts);
+        // }
+        
+    };
+
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ flex: 1, marginTop: 50, backgroundColor: 'white' }}>
@@ -141,13 +78,13 @@ const Home = (props) => {
                             style={{ width: 24, height: 24 }}
                             resizeMode='cover'
                             source={require('../../../../assets/images/ic_search.png')} />
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: 150, height: 50}}>
-                            <Text style={{color: 'black', fontWeight: '800', fontSize: 16}}>Hoang</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: 150, height: 50 }}>
+                            <Text style={{ color: 'black', fontWeight: '800', fontSize: 16 }}>Hoang</Text>
                             <Image
                                 style={{ width: 50, height: 50 }}
                                 resizeMode='cover'
                                 source={require('../../../../assets/images/ic_profile2.png')} />
-                            <Text style={{color: 'black', fontWeight: '800', fontSize: 16}}>Long</Text>
+                            <Text style={{ color: 'black', fontWeight: '800', fontSize: 16 }}>Long</Text>
                         </View>
 
                         <Image
@@ -238,6 +175,17 @@ const Home = (props) => {
 
 
                         </ScrollView>
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: 16, marginRight: 30 }}>
+                            <TouchableOpacity onPress={() => showDialogSort()}>
+                                <Text style={{ color: 'black', fontWeight: '600', fontSize: 14, textDecorationLine: 'underline' }}>Sort by</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {
+                            visibleSort ? <ProductSortDialog onSort={onSort} isVisible={visibleSort} /> : null
+                        }
+
                         <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
                             {
                                 listProduct ?
@@ -247,16 +195,6 @@ const Home = (props) => {
                             }
                         </View>
                     </ScrollView>
-
-                    {/* <FlatList
-                        data={listProduct}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item._id}
-                        extraData={selectedId}
-                        showsVerticalScrollIndicator={false}
-                        numColumns={2}
-                    /> */}
-
 
                 </View>
             </View>
@@ -287,6 +225,4 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         shadowOpacity: 0.3
     },
-
-
-})
+});

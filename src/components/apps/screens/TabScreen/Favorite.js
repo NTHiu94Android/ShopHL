@@ -8,9 +8,9 @@ const Favorite = (props) => {
   const { navigation } = props;
   const { user } = useContext(UserContext);
   const {
-    onGetOrderDetailsByIdOrder, listFavorite,
+    onGetOrderDetailsByIdOrder, listFavorite, 
     setListFavorite, onGetProductById, countFavorite, setCountCart, countCart,
-    onDeleteOrderDetail, onUpdateOrderDetail, total, setTotal, setListCart
+    onDeleteOrderDetail, onUpdateOrderDetail, total, setTotal, setListCart, listCart
   } = useContext(AppContext);
   //Lay danh sach san phma trong gio hang
   useEffect(() => {
@@ -75,19 +75,24 @@ const Favorite = (props) => {
     try {
       //Cap nhat idOder tu idFavorite sang idCart
       const itemToCart = listFavorite.find(item => item._id === it._id);
-      itemToCart.idOrder = user.cart;
-      setListCart(current => [...current, itemToCart]);
-      console.log("itemToCart: ", itemToCart);
+      const newListCart = listCart.map(item => {
+        if (item.idProduct === itemToCart.idProduct) {
+          item.amount = item.amount + 1;
+          item.totalPrice = item.totalPrice + itemToCart.price;
+          setTotal(total + itemToCart.price);
+          onUpdateOrderDetail(item._id, item.totalPrice, item.amount, user.cart, item.idProduct);
+        }
+        return item;
+      });
+      setListCart(newListCart);
       setCountCart(countCart + 1);
-      setTotal(total + itemToCart.totalPrice);
-
       //Xoa san pham khoi danh sach yeu thich
       const listNew = listFavorite.filter(item => item._id !== it._id);
       setListFavorite(listNew);
-      //console.log("listNew: ", listNew);
 
       //Cap nhat tren database
-      await onUpdateOrderDetail(itemToCart._id, itemToCart.totalPrice, itemToCart.amount, user.cart, itemToCart.idProduct);
+      await deleteFavoriteItem(itemToCart._id);
+      //await onUpdateOrderDetail(itemToCart._id, itemToCart.totalPrice, itemToCart.amount, user.cart, itemToCart.idProduct);
     } catch (error) {
       console.log("Add 1 to cart fail: ", error);
     }
@@ -105,7 +110,7 @@ const Favorite = (props) => {
           <TouchableOpacity onPress={() => addAllToCart()} style={styles.button}>
             <Text style={styles.buttonText}>Add all to my cart</Text>
           </TouchableOpacity> :
-          <View style={[styles.button, {backgroundColor: '#BBB'}]}>
+          <View style={[styles.button, { backgroundColor: '#BBB' }]}>
             <Text style={styles.buttonText}>Add all to my cart</Text>
           </View>
       }
@@ -133,8 +138,9 @@ export default Favorite
 
 const styles = StyleSheet.create({
   header: {
-    margin: 20,
-    marginTop: "15%",
+    marginBottom: 20,
+    marginHorizontal: 20,
+    marginTop: 68,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center'
@@ -154,8 +160,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     marginVertical: 0,
-    padding: 10,
-    paddingVertical: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
     borderBottomWidth: 0.5,
     borderRadius: 20,
     borderColor: 'rgba(0, 0, 0, 0.2)',
@@ -172,19 +178,19 @@ const styles = StyleSheet.create({
   },
   TextlstName: {
     fontWeight: 'normal',
-    fontSize: 14,
-    fontWeight: '400',
+    fontSize: 16,
+    fontWeight: '800',
     marginBottom: 5,
   },
   TextlstPrice: {
     fontWeight: 'bold',
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 14,
+    fontWeight: '600',
     marginTop: 5,
   },
   listItemIcon: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   button: {
     position: 'absolute',
@@ -216,13 +222,13 @@ const Item = ({ name, price, image, deleteFavoriteItem, addOneToCart }) => {
       </View>
       <View style={styles.listItemIcon}>
         <TouchableOpacity onPress={deleteFavoriteItem}>
-          <View style={{ alignSelf: 'flex-start', width: '100%', alignItems: 'center' }}>
-            <Image source={require('../../../../assets/images/del.png')} style={{ width: 30, height: 30 }} />
+          <View style={{ width: '100%', alignItems: 'center', marginVertical: 5 }}>
+            <Image source={require('../../../../assets/images/del.png')} style={{ width: 24, height: 24 }} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={addOneToCart}>
-          <View style={{ alignSelf: 'flex-start', width: '100%', alignItems: 'center' }}>
-            <Image source={require('../../../../assets/images/shop.png')} style={{ width: 30, height: 30 }} />
+          <View style={{ width: '100%', alignItems: 'center', marginVertical: 5 }}>
+            <Image source={require('../../../../assets/images/shop.png')} style={{ width: 24, height: 24 }} />
           </View>
         </TouchableOpacity>
       </View>

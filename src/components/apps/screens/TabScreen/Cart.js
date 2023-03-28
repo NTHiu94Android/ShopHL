@@ -18,6 +18,7 @@ const Cart = (props) => {
   useEffect(() => {
     const getListCart = async () => {
       try {
+        let sum = 0;
         const response = await onGetOrderDetailsByIdOrder(user.cart);
         if (!response) return;
         //console.log("List cart: ", response);
@@ -31,8 +32,10 @@ const Cart = (props) => {
           response[i].prodName = product.name;
           response[i].totalPrice = product.price * response[i].amount;
           response[i].price = product.price;
+          sum += response[i].totalPrice;
         }
         setListCart(response);
+        setTotal(sum);
 
       } catch (error) {
         console.log("Get list cart error: ", error);
@@ -62,7 +65,7 @@ const Cart = (props) => {
 
   const updateItem = (id, newValue) => {
     //Cap nhat tren giao dien 
-    let sum = 0;
+    let sum = 0; 
     const newItems2 = listCart.map(item => {
       if (item._id === id) {
         item.amount = newValue;
@@ -108,7 +111,7 @@ const Cart = (props) => {
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{ flex: 1, justifyContent: 'center', marginTop: 50, paddingHorizontal: 20, backgroundColor: 'white' }}>
-        <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '800', marginTop: 18, marginBottom: 12 }}>My cart</Text>
+        <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '800', marginTop: 18, marginBottom: 20 }}>My cart</Text>
         <SafeAreaView style={styles.container}>
           <FlatList
             data={listCart}
@@ -159,10 +162,10 @@ const Item = ({ item, plus, minus, deleteItem }) => (
       <Image source={{ uri: item.imageurl }} style={styles.image} />
       <View style={{ justifyContent: 'space-between', paddingVertical: 5, paddingStart: 10 }}>
         <View>
-          <Text style={{ fontSize: 14 }}>{item.prodName}</Text>
-          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>$ {item.totalPrice}</Text>
+          <Text style={{ fontSize: 16, fontWeight: '800' }}>{item.prodName}</Text>
+          <Text style={{ fontSize: 14, fontWeight: '600' }}>$ {item.totalPrice}</Text>
         </View>
-        <View style={styles.qualityRange}>
+        <View style={styles.qualityRange}> 
           <TouchableOpacity onPress={plus}>
             <Entypo name="squared-plus" size={30} color="black" />
           </TouchableOpacity>
@@ -182,7 +185,7 @@ const Item = ({ item, plus, minus, deleteItem }) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    //marginTop: StatusBar.currentHeight || 0,
   },
   item: {
     paddingBottom: 5,

@@ -36,7 +36,7 @@ const Item = ({ item, onpress }) => (
 
 const Processing = (props) => {
   const { navigation } = props;
-  const { onGetOrderByIdUserAndStatus, listProcessing, setListProcessing } = useContext(AppContext);
+  const { onGetOrderByIdUserAndStatus, listProcessing, setListProcessing, countOrderDetail, setCountOrderDetail } = useContext(AppContext);
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -46,16 +46,22 @@ const Processing = (props) => {
   const getOrderByIdUserAndStatus = async () => {
     const res1 = await onGetOrderByIdUserAndStatus(user._id, 'Processing'); 
     const res2 = await onGetOrderByIdUserAndStatus(user._id, 'Confirmed'); 
-    console.log("Processing list: ", res1); 
-    console.log("Confirmed list: ", res2);
+    //console.log("Processing list: ", res1); 
+    //console.log("Confirmed list: ", res2);
     setListProcessing([...res1, ...res2]);
   };
+
+  const gotoOrderDetail = (item) => {
+    setCountOrderDetail(countOrderDetail + 1);
+    navigation.navigate('OrderDetail', { item });
+  };
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.container}>
         {
           listProcessing.length > 0 && 
-          listProcessing.map((item) => <Item key={item._id} item={item} onpress={() => navigation.navigate('OrderDetail')} />)
+          listProcessing.map((item) => <Item key={item._id} item={item} onpress={() => gotoOrderDetail(item)} />)
         }
       </View>
     </ScrollView>

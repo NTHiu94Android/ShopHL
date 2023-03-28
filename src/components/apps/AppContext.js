@@ -19,6 +19,7 @@ export const AppContextProvider = (props) => {
   const [listCanceled, setListCanceled] = useState([]);
   const [countCart, setCountCart] = useState(0);
   const [countFavorite, setCountFavorite] = useState(0);
+  const [countOrderDetail, setCountOrderDetail] = useState(0);
   const [total, setTotal] = useState(0);
   const [ship, setShip] = useState(5);
 
@@ -156,7 +157,7 @@ export const AppContextProvider = (props) => {
   const onGetOrderByIdUserAndStatus = async (idUser, status) => {
     try {
       const order = await get_order_by_idUser_and_status(idUser, status);
-      console.log("OnGetOrderByIdUserAndStatus Response: ", order.data);
+      //console.log("OnGetOrderByIdUserAndStatus Response: ", order.data);
       return order.data;
     } catch (error) {
       console.log("OnGetOrderByIdUserAndStatus Error: ", error);
@@ -171,7 +172,8 @@ export const AppContextProvider = (props) => {
       countFavorite, setCountFavorite, onGetProductsByBrand,
       listFavorite, setListFavorite, onDeleteOrderDetail, onUpdateOrderDetail,
       total, setTotal, ship, setShip, listOrder, setListOrder, onGetOrderByIdUserAndStatus,
-      listProcessing, setListProcessing, listDelivered, setListDelivered, listCanceled, setListCanceled
+      listProcessing, setListProcessing, listDelivered, setListDelivered, listCanceled, setListCanceled,
+      countOrderDetail, setCountOrderDetail
     }}>
       {children}
     </AppContext.Provider>

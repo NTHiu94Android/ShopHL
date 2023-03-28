@@ -28,8 +28,8 @@ export const getProducts = async () => {
 };
 
 //Lay san pham theo id
-export const get_product_by_id = async (_idProduct) => {
-    return await CustomAxios().get("product/api/get-product-by-id/" + _idProduct);
+export const get_product_by_id = async (id) => {
+    return await CustomAxios().get("product/api/get-product-by-id/" + id);
 };
 
 //Lay san pham theo idBrand
@@ -62,8 +62,8 @@ export const update_order_detail = async (_id, totalPrice, amount, idOrder, idPr
 };
 
 //Lay order_details theo idOrder
-export const get_order_details_by_idOrder = async (_idOrder) => {
-    return await CustomAxios().get("order_detail/api/get-order_detail-by-idOrder/" + _idOrder);
+export const get_order_details_by_idOrder = async (id) => {
+    return await CustomAxios().get("order_detail/api/get-order_detail-by-idOrder/" + id);
 };
 
 

@@ -130,17 +130,19 @@ const styleSetting = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     fontWeight: 'bold',
-    marginStart: 70,
+  },
+  txtOrderDetail2: {
+    width: 16
   },
   icBack: {
     width: 16,
     height: 16,
-    marginEnd: 50,
   },
   viewHeader: {
     flexDirection: 'row',
-    marginStart: 15,
+    marginHorizontal: 15,
     marginTop: 15,
+    justifyContent: 'space-between',
   },
   header: {
     // backgroundColor: 'green', 

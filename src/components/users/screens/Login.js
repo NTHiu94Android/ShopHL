@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput, ToastAndroid } from 'react-native'
 import React, { useContext, useState } from 'react'
 
 import { UserContext } from '../UserContext';
@@ -11,14 +11,14 @@ const Login = (props) => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      alert('Please fill all the fields');
+      ToastAndroid.show('Please fill all the fields!', ToastAndroid.SHORT);
       return;
     };
     const res = await onLogin(email, password);
-    if (res.statusCode === 200) {
+    if (res.data) {
       setUser(res.data);
     } else {
-      alert('Login failed');
+      ToastAndroid.show('Login fail!', ToastAndroid.SHORT);
     }
   };
   // const getUser = () => {
