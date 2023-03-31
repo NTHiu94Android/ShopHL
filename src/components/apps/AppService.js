@@ -67,6 +67,17 @@ export const get_order_details_by_idOrder = async (id) => {
 };
 
 
+//------------------------------------IMAGE----------------------------------
+//Lay hinh anh theo idProduct
+export const get_image_by_idProduct = async (id) => {
+    return await CustomAxios().get("picture/api/get_picture_by_id/" + id);
+};
+
+//Lay hinh anh theo idProduct va Color
+export const get_image_by_idProduct_and_color = async (idProduct, color) => {
+    return await CustomAxios().get("picture/api/get_pictures_by_color/" + idProduct + "/" + color);
+};
+
 
 
 

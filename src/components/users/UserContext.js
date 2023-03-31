@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react'
-import { login, register } from './UserService';
+import { forgot_password, login, register, reset_password } from './UserService';
 
 export const UserContext = createContext();
 
@@ -27,8 +27,28 @@ export const UserContextProvider = (props) => {
     }
   };
 
+  //forgot password
+  const onForgotPassword = async (email) => {
+    try {
+      const response = await forgot_password(email);
+      return response;
+    } catch (error) {
+      console.log("Forgot password Error: ", error);
+    }
+  };
+
+  //reset password
+  const onResetPassword = async (token, password, confirm_password) => {
+    try {
+      const response = await reset_password(token, password, confirm_password);
+      return response;
+    } catch (error) {
+      console.log("Reset password Error: ", error);
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUser, onLogin, onRegister }}>
+    <UserContext.Provider value={{ user, setUser, onLogin, onRegister, onForgotPassword, onResetPassword }}>
       {children}
     </UserContext.Provider>
   )

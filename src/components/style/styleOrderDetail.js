@@ -45,7 +45,6 @@ const styleOrderDetail = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     alignItems: 'flex-start',
-    marginRight: 30,
   },
   viewCustomer:{
     padding: 18,
@@ -87,7 +86,6 @@ const styleOrderDetail = StyleSheet.create({
     color: 'black',
     justifyContent:'space-around',
     backgroundColor: 'white',
-
   },
 
 
@@ -117,6 +115,11 @@ const styleOrderDetail = StyleSheet.create({
     flexDirection: 'row',
     color: 'black',
     justifyContent:'space-around',
+    paddingVertical: 15,
+    flexDirection: 'row',
+    color: 'black',
+    justifyContent:'space-around',
+    backgroundColor: 'white',
 
   },
   viewDetail:{
@@ -185,7 +188,7 @@ const styleOrderDetail = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: 50,
+    paddingTop: 30,
   },
 })
 

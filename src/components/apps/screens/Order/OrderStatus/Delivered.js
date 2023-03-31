@@ -1,7 +1,9 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../../AppContext';
 import { UserContext } from '../../../../users/UserContext';
+
+import ProgressDialog from 'react-native-progress-dialog';
 
 const Item = ({ item, onpress }) => (
   <View style={styles.containerItem}>
@@ -34,11 +36,14 @@ const Delivered = (props) => {
   const { onGetOrderByIdUserAndStatus, listDelivered, setListDelivered, setCountOrderDetail, countOrderDetail } = useContext(AppContext);
   const { user } = useContext(UserContext);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     getOrderByIdUserAndStatus();
   }, []);
 
   const getOrderByIdUserAndStatus = async () => {
+    setIsLoading(true);
     const res = await onGetOrderByIdUserAndStatus(user._id, 'Delivered');
     if (res != undefined) {
       //console.log(res);
@@ -47,6 +52,7 @@ const Delivered = (props) => {
       //console.log('error get delivered: ');
       setListDelivered([]);
     }
+    setIsLoading(false);
   };
 
   const gotoOrderDetail = (item) => {
@@ -62,6 +68,11 @@ const Delivered = (props) => {
           listDelivered.map((item) => <Item key={item._id} item={item} onpress={() => gotoOrderDetail(item)} />)
         }
       </View>
+      <ProgressDialog
+        visible={isLoading}
+        title="Đang tải dữ liệu"
+        message="Vui lòng đợi trong giây lát..."
+      />
     </ScrollView>
   )
 }

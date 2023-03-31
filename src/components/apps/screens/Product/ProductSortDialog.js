@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 
 const ProductSortDialog = ({ onSort, isVisible }) => {
-  const [sort, setSort] = useState(''); // ['name', 'price', 'rating'
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleSort = (sort) => {
@@ -27,9 +26,6 @@ const ProductSortDialog = ({ onSort, isVisible }) => {
         <TouchableOpacity style={styles.sortButton} onPress={() => handleSort('')}>
           <Text style={{color: 'white', fontWeight: '800', fontSize: 16, textAlign: 'center'}}>Cancel</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.sortButton} onPress={() => handleSort(sort)} >
-          <Text style={{color: 'white', fontWeight: '800', fontSize: 16, textAlign: 'center'}}>Sort</Text>
-        </TouchableOpacity> */}
       </View>
     </Modal>
   );

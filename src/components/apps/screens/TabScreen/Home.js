@@ -3,6 +3,8 @@ import React, { useState, useContext, useEffect } from 'react'
 import { AppContext } from '../../../apps/AppContext';
 import ProductSortDialog from '../Product/ProductSortDialog';
 
+import ProgressDialog from 'react-native-progress-dialog';
+
 const Item = ({ item, onPress }) => (
     <TouchableOpacity style={{ flexWrap: 'wrap', width: '49%', marginBottom: 10 }} onPress={onPress}>
         <View style={styles.itemContainer}>
@@ -31,14 +33,18 @@ const Home = (props) => {
     const [listProduct, setListProduct] = useState([]);
     const [visibleSort, setVisibleSort] = useState(false);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         getData();
     }, []);
 
     const getData = async () => {
+        setIsLoading(true);
         const list = await onGetProducts();
         //console.log(list);
         setListProduct(list);
+        setIsLoading(false);
     };
 
     const getProductsByBrand = async (brand) => {
@@ -54,10 +60,10 @@ const Home = (props) => {
     const onSort = (sort) => {
         setVisibleSort(false);
         console.log(sort);
-        if(sort === 'down'){
+        if (sort === 'down') {
             const sortedProducts = listProduct.sort((a, b) => b.price - a.price);
             setListProduct(sortedProducts);
-        }else if(sort === 'up'){
+        } else if (sort === 'up') {
             const sortedProducts = listProduct.sort((a, b) => a.price - b.price);
             setListProduct(sortedProducts);
         }
@@ -65,12 +71,13 @@ const Home = (props) => {
         //     const sortedProducts = listProduct.sort((a, b) => a.reviews - b.reviews);
         //     setListProduct(sortedProducts);
         // }
-        
+
     };
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
-            <View style={{ flex: 1, marginTop: 50, backgroundColor: 'white' }}>
+
+            <View style={{ flex: 1, marginTop: 30, backgroundColor: 'white' }}>
                 <View style={styles.container}>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, marginTop: 10, paddingHorizontal: 12 }}>
@@ -81,7 +88,7 @@ const Home = (props) => {
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: 150, height: 50 }}>
                             <Text style={{ color: 'black', fontWeight: '800', fontSize: 16 }}>Hoang</Text>
                             <Image
-                                style={{ width: 50, height: 50 }}
+                                style={{ width: 50, height: 57 }}
                                 resizeMode='cover'
                                 source={require('../../../../assets/images/ic_profile2.png')} />
                             <Text style={{ color: 'black', fontWeight: '800', fontSize: 16 }}>Long</Text>
@@ -198,6 +205,11 @@ const Home = (props) => {
 
                 </View>
             </View>
+
+            <ProgressDialog
+                visible={isLoading}
+                title="Đang tải dữ liệu"
+                message="Vui lòng đợi trong giây lát..." />
         </View>
     )
 }

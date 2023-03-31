@@ -1,21 +1,22 @@
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native'
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { AppContext } from '../../AppContext';
 import back from '../../../backEvent/back';
 import { UserContext } from '../../../users/UserContext';
 
+import Swiper from 'react-native-swiper';
+
+
 const ProductDetail = ({ route, navigation }) => {
   const { item } = route.params;
-  const {onAddToCart, onAddToFavorite, setListCart, 
+  const { onAddToCart, onAddToFavorite, setListCart,
     setListFavorite, setCountCart, countCart,
-    total, setTotal
+    total, setTotal, onGetImagesByIdProduct, onGetImageByIdProductAndColor
   } = useContext(AppContext);
-  const {user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [count, setCount] = useState(1);
-  
+
   back(navigation);
-  // console.log("Detail item: ");
-  // console.log(item);
 
   const handleCountPlus = () => {
     setCount(count + 1);
@@ -63,62 +64,99 @@ const ProductDetail = ({ route, navigation }) => {
     }
   };
 
-  //console.log("List favorite update: ", listFavorite);
+  //Lay tat ca hinhanh cua san pham
+  // useEffect(() => {
+  //   const getImagesProduct = async () => {
+  //     const images = await onGetImagesByIdProduct(item._id);
+  //     console.log("Images: ", images);
+  //     //them list image vao item
+  //     item.listImage = images;
+  //   }
+  //   getImagesProduct();
+  // }, []);
+
+  //Lay anh theo mau
+  const getImageByColor = async (color) => {
+    try {
+      const image = await onGetImageByIdProductAndColor(item._id, color);
+      console.log("Image: ", image);
+      //set image vao item
+      item.listImage = [image];
+    } catch (error) {
+      console.log("Get image by color error: ", error);
+    }
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
-      <ScrollView style={{ flex: 1, position: 'relative' }}>
-        <View style={{ flex: 4, justifyContent: 'center', alignItems: 'center', paddingTop: 50, }}>
-          <Image
-            style={{ width: '100%', height: 350 }}
-            resizeMode='stretch'
-            source={{
-              uri: item.listImage[0],
-            }} />
-          <View style={{ position: "absolute", top: 0, left: 0 }}>
+      <ScrollView style={{ flex: 1, position: 'relative', marginBottom: 80 }}>
+
+        {/* Box product */}
+        <View style={{ flex: 4, justifyContent: 'center', alignItems: 'center' }}>
+          <Swiper
+            style={{ height: 350 }}
+            autoplayTimeout={5}
+            autoplay={true}
+            loop={true}
+            showsPagination={true}>
+            {item.listImage.map((image, index) => {
+              return (
+                <Image
+                  key={index}
+                  style={{ width: '100%', height: 350 }}
+                  resizeMode='stretch'
+                  source={{
+                    uri: image,
+                  }} />
+              )
+            })}
+          </Swiper>
+
+          <View style={{ position: "absolute", top: 20, left: 10 }}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Image
                 resizeMode='cover'
                 source={require('../../../../assets/images/ic_back.png')}
-                style={{ width: 35, marginTop: 40, marginLeft: 27 }}
+                style={{ width: 50 }}
               />
             </TouchableOpacity>
 
             <Image
               resizeMode='cover'
               source={require('../../../../assets/images/ic_color.png')}
-              style={{ width: 35, height: 149, marginLeft: 27 }}
+              style={{ width: 40, height: 155 }}
             />
           </View>
         </View>
 
-        <View style={{ flex: 6, paddingTop: 15, paddingHorizontal: 12 }}>
+        {/* Box information */}
+        <View style={{ flex: 6, paddingHorizontal: 12 }}>
           <Text style={{ color: 'black', fontWeight: '800', fontSize: 24, marginTop: 16, lineHeight: 30.47 }}>
             {item.name}</Text>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ color: 'black', fontWeight: '700', fontSize: 30, lineHeight: 40.92, marginTop: 10, flex: 3 }}>
-              {item.price}
+            <Text style={{ color: 'black', fontWeight: '700', fontSize: 30, marginTop: 6, flex: 3 }}>
+              $ {item.price}
             </Text>
-            <View style={{ flexDirection: 'row', margin: 20, flex: 1 }}>
-              <TouchableOpacity style={{}} onPress={() => handleCountPlus()}>
+            <View style={{ flexDirection: 'row', marginHorizontal: 20, marginTop: 6, flex: 1 }}>
+              <TouchableOpacity style={{}} onPress={() => handleCountMinus()}>
                 <Image
                   style={{ width: 25, height: 25 }}
-                  source={require('../../../../assets/images/btn_plus.png')} />
+                  source={require('../../../../assets/images/btn_minus.png')} />
               </TouchableOpacity>
 
               <View style={{ width: 25, height: 25, marginHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{}}>{count}</Text>
               </View>
 
-              <TouchableOpacity onPress={() => handleCountMinus()}>
+              <TouchableOpacity onPress={() => handleCountPlus()}>
                 <Image
                   style={{ width: 25, height: 25 }}
-                  source={require('../../../../assets/images/btn_minus.png')}
+                  source={require('../../../../assets/images/btn_plus.png')}
                 />
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{ flexDirection: 'row', marginTop: 10 }}>
+          <View style={{ flexDirection: 'row', marginTop: 6 }}>
             <Image
               style={{ width: 20, height: 20 }}
               source={require('../../../../assets/images/ic_star.png')}
@@ -133,8 +171,11 @@ const ProductDetail = ({ route, navigation }) => {
             {item.describer}
           </Text>
         </View>
+
       </ScrollView >
-      {/* ---------------------- */}
+
+
+      {/* Box favorite + add to cart (absolute) */}
       <View style={styles.viewButton}>
         <View style={{ marginRight: 15 }}>
           <TouchableOpacity onPress={() => addToFavorite()} style={styles.button1}>
@@ -161,7 +202,7 @@ const styles = StyleSheet.create({
   viewButton: {
     position: 'absolute',
     alignItems: 'center',
-    bottom: 30,
+    bottom: 10,
     borderRadius: 10,
     alignSelf: 'center',
     flexDirection: 'row',

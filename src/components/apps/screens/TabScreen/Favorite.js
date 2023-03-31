@@ -1,21 +1,27 @@
 import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from 'react-native'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { AppContext } from '../../AppContext';
 import { UserContext } from '../../../users/UserContext';
+
+import ProgressDialog from 'react-native-progress-dialog';
 
 const Favorite = (props) => {
   const { navigation } = props;
   const { user } = useContext(UserContext);
   const {
-    onGetOrderDetailsByIdOrder, listFavorite, 
-    setListFavorite, onGetProductById, countFavorite, setCountCart, countCart,
+    onGetOrderDetailsByIdOrder, listFavorite, onAddToCart,
+    setListFavorite, onGetProductById, countFavorite, setCountFavorite, setCountCart, countCart,
     onDeleteOrderDetail, onUpdateOrderDetail, total, setTotal, setListCart, listCart
   } = useContext(AppContext);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   //Lay danh sach san phma trong gio hang
   useEffect(() => {
     const getListfavorite = async () => {
       try {
+        setIsLoading(true);
         const response = await onGetOrderDetailsByIdOrder(user.favorite);
         if (!response) return;
         //console.log("List favorite: ", response);
@@ -30,6 +36,7 @@ const Favorite = (props) => {
           response[i].price = product.price;
         }
         setListFavorite(response);
+        setIsLoading(false);
       } catch (error) {
         console.log("Get list favorite error: ", error);
       }
@@ -41,22 +48,69 @@ const Favorite = (props) => {
   const addAllToCart = async () => {
     try {
       if (listFavorite.length === 0) return;
-      let sum = 0;
-      for (let i = 0; i < listFavorite.length; i++) {
-        //Cap nhat idOder tu idFavorite sang idCart
-        const cartItem = await onUpdateOrderDetail(
-          listFavorite[i]._id, listFavorite[i].totalPrice,
-          listFavorite[i].amount, user.cart,
-          listFavorite[i].idProduct
-        );
-        sum = sum + listFavorite[i].totalPrice;
-        //console.log("Add to cart: ", response);
+      //Cap nhat idOder tu idFavorite sang idCart
+      const listCartNew = listFavorite.map(item => {
+        item.idOrder = user.cart;
+        return item;
+      });
+
+      //Cap nhat lai danh sach gio hang
+      if(listCart.length === 0) {
+        setListCart(listCartNew);
+        setTotal(listCartNew.reduce((a, b) => a + b.totalPrice, 0));
+        //Cap nhat tren database
+        for (let i = 0; i < listFavorite.length; i++) {
+          await onAddToCart(listFavorite[i].totalPrice, listFavorite[i].amount, user.cart, listFavorite[i].idProduct);
+        }
+      }else{
+        for (let i = 0; i < listFavorite.length; i++) {
+          const itemToCart = listCart.find(item => item.idProduct === listFavorite[i].idProduct);
+          if(itemToCart) {
+            const newListCart = listCart.map(async item => {
+              if (item.idProduct === itemToCart.idProduct) {
+                item.amount = item.amount + 1;
+                item.totalPrice = item.totalPrice + listFavorite[i].price;
+                setTotal(total + listFavorite[i].price);
+                await onUpdateOrderDetail(item._id, item.totalPrice, item.amount, user.cart, item.idProduct);
+              }
+              return item;
+            });
+            setListCart(newListCart); 
+            //Cap nhat tren database
+            //await onUpdateOrderDetail(listFavorite[i]._id, listFavorite[i].totalPrice, listFavorite[i].amount, user.cart, listFavorite[i].idProduct);
+          }else{
+            setListCart([...listCart, listFavorite[i]]);
+            setTotal(total + listFavorite[i].totalPrice);
+            //Them moi san pham vao gio hang
+            await onAddToCart(listFavorite[i].totalPrice, listFavorite[i].amount, user.cart, listFavorite[i].idProduct);
+          }
+        }
       }
       setCountCart(countCart + 1);
-      // setCountFavorite(countFavorite - 1);
-      setTotal(total + sum);
-      setListFavorite([]);
       navigation.navigate('Cart');
+      //Xoa san pham khoi danh sach yeu thich va cap nhat lai database
+      for (let i = 0; i < listFavorite.length; i++) {
+        await deleteFavoriteItem(listFavorite[i]._id);
+      }
+      setCountFavorite(countFavorite + 1);
+      setListFavorite([]);
+
+      // let sum = 0;
+      // for (let i = 0; i < listFavorite.length; i++) {
+      //   //Cap nhat idOder tu idFavorite sang idCart
+      //   const cartItem = await onUpdateOrderDetail(
+      //     listFavorite[i]._id, listFavorite[i].totalPrice,
+      //     listFavorite[i].amount, user.cart,
+      //     listFavorite[i].idProduct
+      //   );
+      //   sum = sum + listFavorite[i].totalPrice;
+      //   //console.log("Add to cart: ", response);
+      // }
+      // setCountCart(countCart + 1);
+      // // setCountFavorite(countFavorite - 1);
+      // setTotal(total + sum);
+      // setListFavorite([]);
+      // navigation.navigate('Cart');
     } catch (error) {
       console.log("Add to cart error: ", error);
     }
@@ -75,12 +129,12 @@ const Favorite = (props) => {
     try {
       //Cap nhat idOder tu idFavorite sang idCart
       const itemToCart = listFavorite.find(item => item._id === it._id);
-      const newListCart = listCart.map(item => {
+      const newListCart = listCart.map(async item => {
         if (item.idProduct === itemToCart.idProduct) {
           item.amount = item.amount + 1;
           item.totalPrice = item.totalPrice + itemToCart.price;
           setTotal(total + itemToCart.price);
-          onUpdateOrderDetail(item._id, item.totalPrice, item.amount, user.cart, item.idProduct);
+          await onUpdateOrderDetail(item._id, item.totalPrice, item.amount, user.cart, item.idProduct);
         }
         return item;
       });
@@ -129,6 +183,12 @@ const Favorite = (props) => {
         keyExtractor={item => item._id}
       />
 
+      <ProgressDialog
+        visible={isLoading}
+        title="Đang tải dữ liệu"
+        message="Vui lòng đợi trong giây lát..."
+      />
+
     </View>
 
   )
@@ -140,7 +200,7 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 20,
     marginHorizontal: 20,
-    marginTop: 68,
+    marginTop: 48,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center'

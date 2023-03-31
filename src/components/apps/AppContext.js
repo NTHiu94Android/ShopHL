@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react'
 import { 
-  addOrder, addToCart, delete_order_detail, getProducts, get_order_by_id, 
+  addOrder, addToCart, delete_order_detail, getProducts, get_image_by_idProduct, get_image_by_idProduct_and_color, get_image_by_idProduct_and_idColor, get_order_by_id, 
   get_order_by_idUser, get_order_by_idUser_and_status, 
   get_order_details_by_idOrder, get_product_by_id, update_order_detail 
 } from './AppService';
@@ -164,6 +164,30 @@ export const AppContextProvider = (props) => {
     }
   };
 
+
+  //------------------------------IMAGE------------------------------
+  //Lay danh sach anh theo idProduct
+  const onGetImagesByIdProduct = async (idProduct) => {
+    try {
+      const images = await get_image_by_idProduct(idProduct);
+      //console.log("OnGetImagesByIdProduct Response: ", images.data);
+      return images.data;
+    } catch (error) {
+      console.log("OnGetImagesByIdProduct Error: ", error);
+    }
+  };
+
+  //Lay hinh anh theo idProduct va color
+  const onGetImageByIdProductAndColor = async (idProduct, color) => {
+    try {
+      const images = await get_image_by_idProduct_and_color(idProduct, color);
+      //console.log("OnGetImageByIdProductAndColor Response: ", images.data);
+      return images.data;
+    } catch (error) {
+      console.log("OnGetImageByIdProductAndColor Error: ", error);
+    }
+  };
+
   return (
     <AppContext.Provider value={{
       onGetProducts, onAddToCart, onAddToFavorite, onAddOrder,
@@ -173,7 +197,8 @@ export const AppContextProvider = (props) => {
       listFavorite, setListFavorite, onDeleteOrderDetail, onUpdateOrderDetail,
       total, setTotal, ship, setShip, listOrder, setListOrder, onGetOrderByIdUserAndStatus,
       listProcessing, setListProcessing, listDelivered, setListDelivered, listCanceled, setListCanceled,
-      countOrderDetail, setCountOrderDetail
+      countOrderDetail, setCountOrderDetail,
+      onGetImagesByIdProduct, onGetImageByIdProductAndColor
     }}>
       {children}
     </AppContext.Provider>

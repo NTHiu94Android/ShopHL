@@ -4,6 +4,8 @@ import styleOrderDetail from '../../../style/styleOrderDetail';
 import { UserContext } from '../../../users/UserContext';
 import { AppContext } from '../../AppContext';
 
+import ProgressDialog from 'react-native-progress-dialog';
+
 const OrderDetail = (props) => {
     const { navigation } = props;
     const { item } = props.route.params;
@@ -11,12 +13,14 @@ const OrderDetail = (props) => {
     const { onGetOrderDetailsByIdOrder, countOrderDetail, onGetProductById } = useContext(AppContext);
 
     const [listOrderDetail, setListOrderDetail] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getOrderDetail();
     }, [countOrderDetail]);
 
     const getOrderDetail = async () => {
+        setIsLoading(true);
         const res = await onGetOrderDetailsByIdOrder(item._id);
         for (let i = 0; i < res.length; i++) {
             const product = await onGetProductById(res[i].idProduct);
@@ -29,6 +33,7 @@ const OrderDetail = (props) => {
         } else {
             setListOrderDetail([]);
         }
+        setIsLoading(false);
     };
 
 
@@ -47,14 +52,14 @@ const OrderDetail = (props) => {
                     </View>
                 </View>
 
-                <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
+                <ScrollView style={{ flex: 1, backgroundColor: 'white' }} showsVerticalScrollIndicator={false}>
                     <View style={styleOrderDetail.body}>
                         <View style={styleOrderDetail.viewTxtOrder}>
                             <View style={styleOrderDetail.viewOrder}>
                                 <Text numberOfLines={1} style={styleOrderDetail.txtOrder}>Order No{item._id}</Text>
                                 <Text>{item.orderDate}</Text>
                             </View>
-                            <View style={styleOrderDetail.viewDetail}>
+                            <View style={[styleOrderDetail.viewDetail,]}>
                                 <View style={styleOrderDetail.viewTotal}>
                                     <Text style={styleOrderDetail.txtTitle}>Total:</Text>
                                     <Text style={styleOrderDetail.txtValue} >${item.totalPrice}</Text>
@@ -66,9 +71,9 @@ const OrderDetail = (props) => {
                                 <View style={styleOrderDetail.viewStatus}>
                                     <Text style={styleOrderDetail.txtTitle}>Status:</Text>
                                     {item.status == 'Delivered' && <Text style={styleOrderDetail.txtValueStatus}>{item.status}</Text>}
-                                    {item.status == 'Canceled' && <Text style={[styleOrderDetail.txtValueStatus, {color: 'red'}]}>{item.status}</Text>}
+                                    {item.status == 'Canceled' && <Text style={[styleOrderDetail.txtValueStatus, { color: 'red' }]}>{item.status}</Text>}
                                     {item.status == 'Confirmed' && <Text style={[styleOrderDetail.txtValueStatus]}>{item.status}</Text>}
-                                    {item.status == 'Processing' && <Text style={[styleOrderDetail.txtValueStatus, {color: '#FFD700'}]}>{item.status}</Text>}
+                                    {item.status == 'Processing' && <Text style={[styleOrderDetail.txtValueStatus, { color: '#FFD700' }]}>{item.status}</Text>}
                                 </View>
                             </View>
                         </View>
@@ -97,16 +102,23 @@ const OrderDetail = (props) => {
 
 
                     <View style={styleOrderDetail.footer}>
-                        <View style={styleOrderDetail.viewCustomer}>
-                            <Text style={styleOrderDetail.txtCustomer}>List product</Text>
+                        <View style={[styleOrderDetail.viewCustomer, {flexDirection: 'column'}]}>
+                            <Text style={[styleOrderDetail.txtCustomer, {marginBottom: 16, width: '100%'}]}>List product</Text>
+                            {
+                                listOrderDetail.length > 0 &&
+                                listOrderDetail.map((item) => <Item key={item._id} item={item} />)
+                            }
                         </View>
-                        {
-                            listOrderDetail.length > 0 &&
-                            listOrderDetail.map((item) => <Item key={item._id} item={item} />)
-                        }
                     </View>
                 </ScrollView>
             </View>
+
+            <ProgressDialog
+                visible={isLoading}
+                title="Đang tải dữ liệu"
+                message="Vui lòng đợi trong giây lát..."
+            />
+
         </View>
     )
 }
@@ -117,10 +129,9 @@ const styles = StyleSheet.create({
     listItem: {
         display: 'flex',
         flexDirection: 'row',
-        paddingHorizontal: 10,
-        paddingVertical: 20,
-        borderBottomWidth: 0.5,
-        borderColor: 'rgba(0, 0, 0, 0.2)',
+        paddingVertical: 8,
+        // borderBottomWidth: 0.5,
+        // borderColor: 'rgba(0, 0, 0, 0.2)',
     },
     imgLst: {
         width: 70,
