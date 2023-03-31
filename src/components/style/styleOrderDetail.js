@@ -4,7 +4,17 @@ const styleOrderDetail = StyleSheet.create({
   /* footer */
 
   footer: {
-    flex: 2,
+    marginHorizontal: 10,
+    paddingHorizontal: 5,
+    borderRadius: 4,
+    elevation: 5,
+    shadowOffset: {
+      width: 1,
+      height: 3
+    },
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
+    marginBottom: 6,
   },
   /*
   */
@@ -28,8 +38,6 @@ const styleOrderDetail = StyleSheet.create({
   viewInformation:{
     marginTop: 1,
     backgroundColor: 'white',
-    height: 120,
-
   },
 
   txtCustomer:{
@@ -37,7 +45,6 @@ const styleOrderDetail = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     alignItems: 'flex-start',
-    marginRight: 30,
   },
   viewCustomer:{
     padding: 18,
@@ -61,7 +68,7 @@ const styleOrderDetail = StyleSheet.create({
     },
     shadowRadius: 5,
     shadowOpacity: 0.3,
-    marginBottom: 6
+    marginBottom: 6,
   },
  
 
@@ -79,7 +86,6 @@ const styleOrderDetail = StyleSheet.create({
     color: 'black',
     justifyContent:'space-around',
     backgroundColor: 'white',
-
   },
 
 
@@ -109,6 +115,11 @@ const styleOrderDetail = StyleSheet.create({
     flexDirection: 'row',
     color: 'black',
     justifyContent:'space-around',
+    paddingVertical: 15,
+    flexDirection: 'row',
+    color: 'black',
+    justifyContent:'space-around',
+    backgroundColor: 'white',
 
   },
   viewDetail:{
@@ -121,6 +132,7 @@ const styleOrderDetail = StyleSheet.create({
     color: 'black',
     alignItems: 'flex-start',
     marginRight: 30,
+    maxWidth: 200,
   },
   viewOrder:{
     flexDirection: 'row',
@@ -176,7 +188,7 @@ const styleOrderDetail = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: 50,
+    paddingTop: 30,
   },
 })
 

@@ -31,7 +31,7 @@ const Item = ({ item, onpress }) => (
 
 const Canceled = (props) => {
   const { navigation } = props;
-  const { onGetOrderByIdUserAndStatus, listCanceled, setListCanceled } = useContext(AppContext);
+  const { onGetOrderByIdUserAndStatus, listCanceled, setListCanceled, setCountOrderDetail, countOrderDetail } = useContext(AppContext);
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -41,12 +41,17 @@ const Canceled = (props) => {
   const getOrderByIdUserAndStatus = async () => {
     const res = await onGetOrderByIdUserAndStatus(user._id, 'Canceled');
     if (res != undefined) {
-      console.log(res);
+      //console.log(res);
       setListCanceled(res);
     } else {
-      console.log('error get delivered: ');
+      //console.log('error get delivered: ');
       setListCanceled([]);
     }
+  };
+
+  const gotoOrderDetail = (item) => {
+    setCountOrderDetail(countOrderDetail + 1);
+    navigation.navigate('OrderDetail', { item });
   };
 
   return (
@@ -54,7 +59,7 @@ const Canceled = (props) => {
       <View style={styles.container}>
         {
           listCanceled.length > 0 &&
-          listCanceled.map((item) => <Item key={item._id} item={item} onpress={() => navigation.navigate('OrderDetail')} />)
+          listCanceled.map((item) => <Item key={item._id} item={item} onpress={() => gotoOrderDetail(item)} />)
         }
       </View>
     </ScrollView>

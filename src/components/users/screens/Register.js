@@ -40,7 +40,7 @@ const Register = (props) => {
       <View style={{ alignItems: 'center' }}>
         <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 50, marginHorizontal: 30}}>
           <View style={{ height: 1, backgroundColor: 'black', flex: 1 }}></View>
-          <Image style={{ width: 50, height: 50 }} source={require('../../../assets/images/logo.png')}></Image>
+          <Image style={{ width: 50, height: 57 }} source={require('../../../assets/images/logo.png')}></Image>
           <View style={{ height: 1, backgroundColor: 'black', flex: 1 }}></View>
         </View>
         <View style={{width: "100%"}}>

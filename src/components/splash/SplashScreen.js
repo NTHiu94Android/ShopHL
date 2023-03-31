@@ -11,7 +11,7 @@ const SplashScreen = (props) => {
     // }, []);
     return (
         <View style={{flex: 1}}>
-            <View>
+            <View style={{flexDirection: 'column', alignItems: 'center'}}>
                 <Image style={styles.img} source={require('../../assets/images/logo.png')}></Image>
                 <Text style={styles.text} >Hoang Long</Text>
                 <Text style={styles.text} >Mobile</Text>
@@ -28,23 +28,21 @@ export default SplashScreen
 const styles = StyleSheet.create({
     img: {
         width: 200,
-        height: 200,
-        top: 150,
-        left: 100
+        height: 230,
+        marginTop: 100,
+        marginBottom: 30
     },
 
     text: {
         textAlign: 'center',
         fontSize: 30,
-        top: 200,
         fontWeight: 'bold'
     },
 
     btn: {
         width: 100,
         height: 50,
+        marginTop: 50,
         backgroundColor: 'black',
-        left: 150,
-        top: 300
     }
 })

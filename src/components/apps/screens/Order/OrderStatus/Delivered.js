@@ -1,7 +1,9 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../../AppContext';
 import { UserContext } from '../../../../users/UserContext';
+
+import ProgressDialog from 'react-native-progress-dialog';
 
 const Item = ({ item, onpress }) => (
   <View style={styles.containerItem}>
@@ -31,22 +33,31 @@ const Item = ({ item, onpress }) => (
 
 const Delivered = (props) => {
   const { navigation } = props;
-  const { onGetOrderByIdUserAndStatus, listDelivered, setListDelivered } = useContext(AppContext);
+  const { onGetOrderByIdUserAndStatus, listDelivered, setListDelivered, setCountOrderDetail, countOrderDetail } = useContext(AppContext);
   const { user } = useContext(UserContext);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getOrderByIdUserAndStatus();
   }, []);
 
   const getOrderByIdUserAndStatus = async () => {
+    setIsLoading(true);
     const res = await onGetOrderByIdUserAndStatus(user._id, 'Delivered');
     if (res != undefined) {
-      console.log(res);
+      //console.log(res);
       setListDelivered(res);
     }else{
-      console.log('error get delivered: ');
+      //console.log('error get delivered: ');
       setListDelivered([]);
     }
+    setIsLoading(false);
+  };
+
+  const gotoOrderDetail = (item) => {
+    setCountOrderDetail(countOrderDetail + 1);
+    navigation.navigate('OrderDetail', { item });
   };
 
   return (
@@ -54,9 +65,14 @@ const Delivered = (props) => {
       <View style={styles.container}>
         {
           listDelivered.length > 0 &&
-          listDelivered.map((item) => <Item key={item._id} item={item} onpress={() => navigation.navigate('OrderDetail')} />)
+          listDelivered.map((item) => <Item key={item._id} item={item} onpress={() => gotoOrderDetail(item)} />)
         }
       </View>
+      <ProgressDialog
+        visible={isLoading}
+        title="Đang tải dữ liệu"
+        message="Vui lòng đợi trong giây lát..."
+      />
     </ScrollView>
   )
 }

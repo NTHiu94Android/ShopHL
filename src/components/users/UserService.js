@@ -23,5 +23,25 @@ export const login = async (email, password) => {
     return response;
 }
 
+//forgot password
+export const forgot_password = async (email) => {
+    const body = {
+        email: email,
+    }
+    const response = await CustomAxios().post('users/api/forgot-password', body);
+    return response;
+}
+
+//reset password
+export const reset_password = async (token, password, confirm_password) => {
+    const body = {
+        token: token,
+        password: password,
+        confirm_password: confirm_password,
+    }
+    const response = await CustomAxios().post('users/api/reset-password', body);
+    return response;
+};
+
 
 

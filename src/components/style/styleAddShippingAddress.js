@@ -23,6 +23,7 @@ const styleAddShippingAddress = StyleSheet.create({
       justifyContent: 'flex-end',
       alignItems: 'center',
       marginBottom: 30,
+      marginTop: 20,
     },
 
     //body
