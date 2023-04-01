@@ -36,7 +36,7 @@ const CheckOut = (props) => {
       );
       listOrderDetail.push(item);
     }
-    
+
     setListCart([]);
     setTotal(0);
     setListProcessing(listOrderDetail);
@@ -74,7 +74,7 @@ const CheckOut = (props) => {
             <Text style={{ fontSize: 18, fontWeight: '300' }}>Delivery method</Text>
             <AntDesign name="edit" size={24} color="black" />
           </View>
-          <View style={[styles.box, {borderRadius: 8, paddingVertical: 10, flexDirection: 'row',}]}>
+          <View style={[styles.box, { borderRadius: 8, paddingVertical: 10, flexDirection: 'row', }]}>
             <Image source={{ uri: 'https://theme.hstatic.net/200000472237/1000829412/14/logo.png?v=584' }}
               style={{ height: 20, width: 90, margin: 10 }} />
             <Text style={{ margin: 10, fontSize: 14, fontWeight: 'bold' }}>Fast (2-3 days)</Text>
@@ -82,7 +82,7 @@ const CheckOut = (props) => {
         </View>
 
         {/* Total price */}
-        <View style={[styles.box, {padding: 10, borderRadius: 8, height: 125, justifyContent: 'space-between', marginTop: 30, marginBottom: 30,}]}>
+        <View style={[styles.box, { padding: 10, borderRadius: 8, height: 125, justifyContent: 'space-between', marginTop: 30, marginBottom: 30, }]}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ fontSize: 18 }}>Order:</Text>
             <Text style={{ fontSize: 18, fontWeight: '300' }}>$ {total}</Text>

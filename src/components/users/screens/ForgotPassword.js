@@ -20,7 +20,6 @@ const ForgotPassword = (props) => {
       //forgot password
       const res = await onForgotPassword(email);
       if (res.data) {
-         navigation.navigate('ResetPassword');
          ToastAndroid.show('Please check your email!', ToastAndroid.SHORT);
       } else {
          ToastAndroid.show('Email does not exist!', ToastAndroid.SHORT);
