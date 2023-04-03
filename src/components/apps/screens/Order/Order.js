@@ -13,8 +13,8 @@ const Order = (props) => {
   const { navigation } = props;
   back(navigation);
   return (
-    <View style={{ flex: 1, paddingTop: 50, backgroundColor: 'white' }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12 }}>
+    <View style={{ flex: 1, paddingTop: 30, backgroundColor: 'white' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, marginTop: 18 }}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             style={styles.iconTopBar}

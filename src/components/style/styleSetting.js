@@ -10,14 +10,11 @@ const styleSetting = StyleSheet.create({
   },
   btnFAQ: {
     flexDirection: 'row',
-    height: 55,
     justifyContent: 'space-between',
     alignItems: 'center',
     borderRadius: 5,
     backgroundColor: 'white',
-    marginHorizontal: 20,
-    paddingHorizontal: 15,
-    marginVertical: 5,
+    marginVertical: 8
   },
   footer: {
     flex: 1,
@@ -28,20 +25,15 @@ const styleSetting = StyleSheet.create({
   //body
   txtSales: {
     fontSize: 15,
-    marginBottom: 5,
+    marginTop: 15,
     color: 'black',
   },
   viewSales: {
     flexDirection: 'row',
-    height: 55,
     justifyContent: 'space-between',
     alignItems: 'center',
     borderRadius: 5,
     backgroundColor: 'white',
-    marginHorizontal: 20,
-    paddingHorizontal: 15,
-    marginTop: 5,
-    marginBottom: 10,
   },
   viewNotifications: {
     flexDirection: 'row',
@@ -61,11 +53,8 @@ const styleSetting = StyleSheet.create({
   },
   viewName: {
     height: 65,
-    justifyContent: 'center',
     borderRadius: 5,
     backgroundColor: 'white',
-    marginHorizontal: 20,
-    paddingHorizontal: 15,
     marginVertical: 10,
   },
   icEdit1: {
@@ -78,11 +67,9 @@ const styleSetting = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 20,
-    marginTop: 30,
+    marginBottom: 15,
   },
   body: {
-    flex: 1,
     // backgroundColor: 'blue',
   },
   //
@@ -107,6 +94,7 @@ const styleSetting = StyleSheet.create({
     marginHorizontal: 20,
     paddingHorizontal: 15,
     marginVertical: 10,
+    elevation: 5,
   },
   icEdit1: {
     width: 16,
@@ -116,39 +104,50 @@ const styleSetting = StyleSheet.create({
   },
   txtPersonalInformation: {
     fontSize: 16,
+    fontWeight: '800'
   },
   viewPersonalInformation: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginTop: 20,
+    marginHorizontal: 12,
+    padding: 12,
+    marginTop: 10,
+    backgroundColor: 'white',
+    elevation: 5,
+    shadowOffset: {
+      width: 1,
+      height: 3
+    },
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
+    marginBottom: 6,
   },
   txtOrderDetail: {
     fontSize: 16,
     color: 'black',
     fontWeight: 'bold',
-    marginStart: 70,
+  },
+  txtOrderDetail2: {
+    width: 16
   },
   icBack: {
     width: 16,
     height: 16,
-    marginEnd: 50,
   },
   viewHeader: {
     flexDirection: 'row',
-    marginStart: 15,
-    marginTop: 15,
+    marginHorizontal: 15,
+    justifyContent: 'space-between',
   },
   header: {
-    flex: 1,
     // backgroundColor: 'green', 
+    marginBottom: 10,
   },
   //
 
   container: {
     flex: 1,
-    backgroundColor: '#CACCCE',
+    backgroundColor: 'white',
     paddingTop: 50,
   },
 })

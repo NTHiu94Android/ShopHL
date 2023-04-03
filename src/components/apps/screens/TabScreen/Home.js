@@ -1,29 +1,27 @@
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, TextInput, ScrollView, Pressable, onSearch } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Modal } from 'react-native'
+import React, { useState, useContext, useEffect } from 'react'
+import { AppContext } from '../../../apps/AppContext';
+import ProductSortDialog from '../Product/ProductSortDialog';
 
+import ProgressDialog from 'react-native-progress-dialog';
 
 const Item = ({ item, onPress }) => (
-    <TouchableOpacity onPress={onPress}>
-        <View style={{ flexDirection: "row" }}>
-            <View style={{ marginTop: 15, marginRight: 15, width: 175, height: 230, padding: 16, marginBottom: 5 }}>
+    <TouchableOpacity style={{ flexWrap: 'wrap', width: '49%', marginBottom: 10 }} onPress={onPress}>
+        <View style={styles.itemContainer}>
+            <View style={{ width: '100%', height: '100%', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 12 }}>
                 <Image
-                    style={{ width: 150, height: 180, position: 'relative' }}
+                    style={{ width: '98%', height: 150, position: 'relative', borderRadius: 10 }}
                     resizeMode='cover'
-                    source={{ uri: item.link, }}
-                />
+                    source={{ uri: item.listImage[0], }} />
                 <Image
-                    style={{ width: 35, height: 35, position: 'absolute', marginLeft: 120, marginTop: 155 }}
+                    style={{ width: 35, height: 35, position: 'absolute', right: 13, bottom: 60 }}
                     resizeMode='cover'
-                    source={require('../../../../assets/images/ic_shop.png')}
-                />
+                    source={require('../../../../assets/images/ic_shop.png')} />
                 <Text style={{ height: 19, color: 'black', fontWeight: '400', fontSize: 14, lineHeight: 19.1, marginTop: 5 }}>
-                    {item.field}
-                </Text>
+                    {item.name}</Text>
                 <Text style={{ height: 19, color: 'black', fontWeight: '700', fontSize: 14, lineHeight: 19.1, marginTop: 5 }}>
-                    {item.price}
-                </Text>
+                    Price: {item.price}</Text>
             </View>
-
         </View>
     </TouchableOpacity>
 );
@@ -31,184 +29,188 @@ const Item = ({ item, onPress }) => (
 
 const Home = (props) => {
     const { navigation } = props;
-    const [selectedId, setSelectedId] = useState('');
+    const { onGetProducts, onGetProductsByBrand } = useContext(AppContext);
+    const [listProduct, setListProduct] = useState([]);
+    const [visibleSort, setVisibleSort] = useState(false);
 
-    const seletedItem = (item) => {
-        setSelectedId(item._id);
-        console.log(item._id);
-        navigation.navigate('ProductDetail', { item: item })
-        //console.log("Homejs selectedId: ", selectedId);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    const getData = async () => {
+        setIsLoading(true);
+        const list = await onGetProducts();
+        //console.log(list);
+        setListProduct(list);
+        setIsLoading(false);
     };
 
+    const getProductsByBrand = async (brand) => {
+        const list = await onGetProductsByBrand(brand);
+        //console.log(list);
+        setListProduct(list);
+    };
 
-    const FlatListData = [
-        {
-            _id: "1",
-            field: "SamSung S20",
-            price: "$25",
-            description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-            link: "https://cdn.tgdd.vn/Products/Images/42/217937/samsung-galaxy-s20-ultra-600x600-1-600x600.jpg",
-            reviews: "4.5",
-            status_review: "(50 reviews)",
-        },
-        {
-            _id: "2",
-            field: "Iphone 14",
-            price: "$25",
-            description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-            link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-            reviews: "4.5",
-            status_review: "(50 reviews)",
-        },
-        {
-            _id: "3",
-            field: "Iphone 14",
-            price: "$25",
-            description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-            link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-            reviews: "4.5",
-            status_review: "(50 reviews)",
-        },
-        {
-            _id: "4",
-            field: "Iphone 14",
-            price: "$25",
-            description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-            link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-            reviews: "4.5",
-            status_review: "(50 reviews)",
-        },
-        {
-            _id: "5",
-            field: "Iphone 14",
-            price: "$25",
-            description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-            link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-            reviews: "4.5",
-            status_review: "(50 reviews)",
-        },
-        {
-            _id: "6",
-            field: "Iphone 14",
-            price: "$25",
-            description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-            link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-            reviews: "4.5",
-            status_review: "(50 reviews)",
-        },
+    const showDialogSort = () => {
+        setVisibleSort(true);
+    };
 
-        {
-            _id: "7",
-            field: "Iphone 14",
-            price: "$25",
-            description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-            link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-            reviews: "4.5",
-            status_review: "(50 reviews)",
-        },
-        {
-            _id: "8",
-            field: "Iphone 14",
-            price: "$25",
-            description: "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
-            link: "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-tim-thumb-600x600.jpg",
-            reviews: "4.5",
-            status_review: "(50 reviews)",
-        },
-    ];
+    const onSort = (sort) => {
+        setVisibleSort(false);
+        console.log(sort);
+        if (sort === 'down') {
+            const sortedProducts = listProduct.sort((a, b) => b.price - a.price);
+            setListProduct(sortedProducts);
+        } else if (sort === 'up') {
+            const sortedProducts = listProduct.sort((a, b) => a.price - b.price);
+            setListProduct(sortedProducts);
+        }
+        // }else if(sort === 'rate'){
+        //     const sortedProducts = listProduct.sort((a, b) => a.reviews - b.reviews);
+        //     setListProduct(sortedProducts);
+        // }
+
+    };
 
     return (
-        <ScrollView>
-            <View style={styles.container}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, marginTop: 10 }}>
-                    <Image
-                        style={{ width: 24, height: 24 }}
-                        resizeMode='cover'
-                        source={require('../../../../assets/images/ic_search.png')} />
-                    <Image
-                        style={{ width: 70, height: 80 }}
-                        resizeMode='cover'
-                        source={require('../../../../assets/images/ic_profile2.png')} />
-                    <Image
-                        style={{ width: 24, height: 24 }}
-                        resizeMode='cover'
-                        source={require('../../../../assets/images/ic_ring.png')} />
+            <View style={{ flex: 1, marginTop: 30, backgroundColor: 'white' }}>
+                <View style={styles.container}>
+
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, marginTop: 10, paddingHorizontal: 12 }}>
+                        <Image
+                            style={{ width: 24, height: 24 }}
+                            resizeMode='cover'
+                            source={require('../../../../assets/images/ic_search.png')} />
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: 150, height: 50 }}>
+                            <Text style={{ color: 'black', fontWeight: '800', fontSize: 16 }}>Hoang</Text>
+                            <Image
+                                style={{ width: 50, height: 57 }}
+                                resizeMode='cover'
+                                source={require('../../../../assets/images/ic_profile2.png')} />
+                            <Text style={{ color: 'black', fontWeight: '800', fontSize: 16 }}>Long</Text>
+                        </View>
+
+                        <Image
+                            style={{ width: 24, height: 24 }}
+                            resizeMode='cover'
+                            source={require('../../../../assets/images/ic_ring.png')} />
+                    </View>
+
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <ScrollView style={{ marginTop: 12, height: 70, }} horizontal={true} showsHorizontalScrollIndicator={false}>
+                            {/* All */}
+                            <TouchableOpacity onPress={() => getData()}>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 40, height: 45, marginBottom: 0 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/ic_all.png')} />
+                                    <Text>All</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {/* Apple */}
+                            <TouchableOpacity onPress={() => getProductsByBrand('apple')}>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 40, height: 40, marginBottom: 5 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/ic_ip.png')} />
+                                    <Text>Apple</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {/* Samsung */}
+                            <TouchableOpacity onPress={() => getProductsByBrand('samsung')}>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 55, height: 40, marginBottom: 5 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/logo_samsung.png')} />
+                                    <Text>Samsung</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {/* Xiaomi */}
+                            <TouchableOpacity onPress={() => getProductsByBrand('xiaomi')}>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 40, height: 40, marginHorizontal: 8, borderRadius: 8, marginBottom: 5 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/ic_xiomi.png')} />
+                                    <Text>Xiaomi</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {/* Huawei */}
+                            <TouchableOpacity>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 40, height: 40, marginBottom: 5 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/ic_huawei.png')} />
+                                    <Text>Huawei</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {/* asus */}
+                            <TouchableOpacity>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 40, height: 40, marginBottom: 5 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/ic_asus.png')} />
+                                    <Text>Asus</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {/* Vivo */}
+                            <TouchableOpacity>
+                                <View style={{ marginEnd: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 55, height: 40, marginBottom: 5 }}
+                                        resizeMode='cover'
+                                        source={require('../../../../assets/images/ic_vivo.png')} />
+                                    <Text>Vivo</Text>
+                                </View>
+                            </TouchableOpacity>
+
+
+
+                        </ScrollView>
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: 16, marginRight: 30 }}>
+                            <TouchableOpacity onPress={() => showDialogSort()}>
+                                <Text style={{ color: 'black', fontWeight: '600', fontSize: 14, textDecorationLine: 'underline' }}>Sort by</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {
+                            visibleSort ? <ProductSortDialog onSort={onSort} isVisible={visibleSort} /> : null
+                        }
+
+                        <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                            {
+                                listProduct ?
+                                    listProduct.map((item) =>
+                                        <Item key={item._id} item={item} onPress={() => navigation.navigate('ProductDetail', { item: item })} />
+                                    ) : null
+                            }
+                        </View>
+                    </ScrollView>
+
                 </View>
-
-                <ScrollView horizontal={true}>
-                    <View style={{ paddingEnd: 5 }}>
-                        <Image
-                            style={{ width: 35, height: 40 }}
-                            resizeMode='cover'
-                            source={require('../../../../assets/images/ic_ip.png')} />
-                    </View>
-                    <View style={{ marginTop: 15, paddingEnd: 5, paddingLeft: 10 }}>
-                        <Image
-                            style={{ width: 70, height: 11 }}
-                            resizeMode='cover'
-                            source={require('../../../../assets/images/ic_samsung.png')} />
-                    </View>
-                    <View style={{ paddingEnd: 5, paddingLeft: 10 }}>
-                        <Image
-                            style={{ width: 35, height: 40 }}
-                            resizeMode='cover'
-                            source={require('../../../../assets/images/ic_xiomi.png')} />
-                    </View>
-                    <View style={{ marginTop: 15, paddingEnd: 5, paddingLeft: 10 }}>
-                        <Image
-                            style={{ width: 70, height: 11 }}
-                            resizeMode='cover'
-                            source={require('../../../../assets/images/ic_sony.png')} />
-                    </View>
-                    <View style={{ paddingEnd: 5, paddingLeft: 10 }}>
-                        <Image
-                            style={{ width: 35, height: 40 }}
-                            resizeMode='cover'
-                            source={require('../../../../assets/images/ic_xiomi.png')} />
-                    </View>
-                    <View style={{ marginTop: 15, paddingEnd: 5, paddingLeft: 10 }}>
-                        <Image
-                            style={{ width: 70, height: 11 }}
-                            resizeMode='cover'
-                            source={require('../../../../assets/images/ic_sony.png')} />
-                    </View>
-                    <View style={{ marginTop: 15, paddingEnd: 5, paddingLeft: 10 }}>
-                        <Image
-                            style={{ width: 70, height: 11 }}
-                            resizeMode='cover'
-                            source={require('../../../../assets/images/ic_sony.png')} />
-                    </View>
-                    <View style={{ paddingEnd: 5, paddingLeft: 10 }}>
-                        <Image
-                            style={{ width: 35, height: 40 }}
-                            resizeMode='cover'
-                            source={require('../../../../assets/images/ic_xiomi.png')} />
-                    </View>
-                    <View style={{ marginTop: 15, paddingEnd: 5, paddingLeft: 10 }}>
-                        <Image
-                            style={{ width: 70, height: 11 }}
-                            resizeMode='cover'
-                            source={require('../../../../assets/images/ic_sony.png')} />
-                    </View>
-
-                </ScrollView>
-
-                {/* <FlatList
-                    data={FlatListData}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item._id}
-                    extraData={selectedId}
-                    showsVerticalScrollIndicator={false}
-                    numColumns={2}
-                /> */}
-                {
-                    FlatListData.map((item) =>
-                        <Item key={item._id} item={item} onPress={() => seletedItem(item)} />
-                    )
-                }
             </View>
-        </ScrollView>
+
+            <ProgressDialog
+                visible={isLoading}
+                title="Đang tải dữ liệu"
+                message="Vui lòng đợi trong giây lát..." />
+        </View>
     )
 }
 
@@ -221,6 +223,18 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
     },
-
-
-})
+    itemContainer: {
+        flex: 1,
+        width: '100%',
+        elevation: 5,
+        shadowColor: 'grey',
+        borderRadius: 4,
+        shadowOffset: {
+            width: 1,
+            height: 3
+        },
+        backgroundColor: 'white',
+        shadowRadius: 5,
+        shadowOpacity: 0.3
+    },
+});

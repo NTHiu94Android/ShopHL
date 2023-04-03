@@ -1,13 +1,17 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
+import { UserContext } from '../../../users/UserContext';
 
 const Profile = (props) => {
   const { navigation } = props;
-  return (
-    <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
-      <View style={styles.container}>
-        <Text style={styles.textProfile}>Profile</Text>
+  const { user } = useContext(UserContext);
 
+  return (
+
+    <View style={{ flex: 1, backgroundColor: 'white', paddingTop: 30 }}>
+      <Text style={styles.textProfile}>Profile</Text>
+
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1, backgroundColor: 'white' }}>
         {/* Body */}
         <View>
 
@@ -17,9 +21,9 @@ const Profile = (props) => {
               <Image
                 style={[styles.iconTopBar, { borderRadius: 80, width: 80, height: 80 }]}
                 resizeMode='cover'
-                source={require('../../../../assets/images/avataruser.png')} />
+                source={{ uri: user.avatar }} />
               <View style={styles.viewInfo}>
-                <Text style={[styles.textName, { color: 'black', }]}>Trong Hieu</Text>
+                <Text style={[styles.textName, { color: 'black', }]}>{user.name}</Text>
                 <Text style={styles.textStatus}>View my profile</Text>
               </View>
             </View>
@@ -106,8 +110,8 @@ const Profile = (props) => {
             </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   )
 }
 
@@ -115,9 +119,7 @@ export default Profile
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
+    flex: 1,
     marginTop: 50,
     backgroundColor: 'white'
   },
@@ -164,7 +166,7 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     marginHorizontal: 16,
     backgroundColor: 'white',
-    // elevation: 5,
+    elevation: 5,
     shadowColor: 'grey',
     borderRadius: 4,
     shadowOffset: {
