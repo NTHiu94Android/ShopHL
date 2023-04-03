@@ -18,7 +18,7 @@ const NavigationApp = () => {
 }
 const SplashNavigation = () => {
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <UserContextProvider>
         <AppContextProvider>
           <NavigationApp />

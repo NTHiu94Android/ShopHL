@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from 'react';
+import { BackHandler, ToastAndroid } from 'react-native';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -9,14 +12,13 @@ import Favorite from './screens/TabScreen/Favorite';
 import Cart from './screens/TabScreen/Cart';
 import Profile from './screens/TabScreen/Profile';
 import SearchScreen from './screens/Search/SearchScreen';
-import OrderDetail from './screens/Order/OrderDetail';
+import ProductDetail from './screens/Product/ProductDetail';
 import CheckOut from './screens/Cart/CheckOut';
 import Success from './screens/Cart/Success';
 import Review from './screens/Product/Review';
-import Order from './screens/Order/Order';
+import OrderStack from './screens/Order/OrderStack';
 import Setting from './screens/Setting/Setting';
 import Shipping from './screens/Shipping/Shipping';
-import Detail from './screens/Product/Detail';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
@@ -63,6 +65,27 @@ const BottomNavigation = () => {
 
 
 const AppNavigation = () => {
+    const [backPressCount, setBackPressCount] = useState(0);
+    useEffect(() => {
+        const backAction = () => {
+            if (backPressCount < 1) {
+                setBackPressCount(backPressCount + 1);
+                ToastAndroid.show('Press back again to exit', ToastAndroid.SHORT);
+                setTimeout(() => setBackPressCount(0), 1000); // reset after 1 seconds
+                return true;
+            } else {
+                BackHandler.exitApp();
+                return true;
+            }
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction,
+        );
+
+        return () => backHandler.remove();
+    }, [backPressCount]);
     return (
         <NavigationContainer independent={true}>
             <Stack.Navigator initialRouteName="BottomNavigation">
@@ -73,8 +96,7 @@ const AppNavigation = () => {
                 <Stack.Screen options={{ headerShown: false }} name='CheckOut' component={CheckOut} />
                 <Stack.Screen options={{ headerShown: false }} name='Success' component={Success} />
                 <Stack.Screen options={{ headerShown: false }} name='Review' component={Review} />
-                <Stack.Screen options={{ headerShown: false }} name='Order' component={Order} />
-                <Stack.Screen options={{ headerShown: false }} name='OrderDetail' component={OrderDetail} />
+                <Stack.Screen options={{ headerShown: false }} name='OrderStack' component={OrderStack} />
                 <Stack.Screen options={{ headerShown: false }} name='Setting' component={Setting} />
                 <Stack.Screen options={{ headerShown: false }} name='Shipping' component={Shipping} />
             </Stack.Navigator>
