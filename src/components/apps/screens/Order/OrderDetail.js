@@ -10,7 +10,7 @@ const OrderDetail = (props) => {
     const { navigation } = props;
     const { item } = props.route.params;
     const { user } = useContext(UserContext);
-    const { onGetOrderDetailsByIdOrder, countOrderDetail, onGetProductById } = useContext(AppContext);
+    const { onGetOrderDetailsByIdOrder, countOrderDetail, onGetProductById, onGetCommentByIdUser, onGetCommentByIdUserAndIdProduct } = useContext(AppContext);
 
     const [listOrderDetail, setListOrderDetail] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -24,16 +24,27 @@ const OrderDetail = (props) => {
         const res = await onGetOrderDetailsByIdOrder(item._id);
         for (let i = 0; i < res.length; i++) {
             const product = await onGetProductById(res[i].idProduct);
-            //console.log('product on order detail: ', product);
+            const cmt = await onGetCommentByIdUserAndIdProduct(user._id, product._id);
+            console.log('cmt: ' + i, cmt);
+            if (cmt.length > 0) {
+                res[i].isCmt = true;
+            } else {
+                res[i].isCmt = false;
+            }
             res[i].product = product;
+            res[i].status = item.status;
         }
-        //console.log('res list order detail: ', res);
+        console.log('res list order detail: ', res.cmt);
         if (res != undefined) {
             setListOrderDetail(res);
         } else {
             setListOrderDetail([]);
         }
         setIsLoading(false);
+    };
+
+    const gotoComment = (item) => {
+        navigation.navigate('Comment', { item });
     };
 
 
@@ -102,11 +113,11 @@ const OrderDetail = (props) => {
 
 
                     <View style={styleOrderDetail.footer}>
-                        <View style={[styleOrderDetail.viewCustomer, {flexDirection: 'column'}]}>
-                            <Text style={[styleOrderDetail.txtCustomer, {marginBottom: 16, width: '100%'}]}>List product</Text>
+                        <View style={[styleOrderDetail.viewCustomer, { flexDirection: 'column' }]}>
+                            <Text style={[styleOrderDetail.txtCustomer, { marginBottom: 16, width: '100%' }]}>List product</Text>
                             {
                                 listOrderDetail.length > 0 &&
-                                listOrderDetail.map((item) => <Item key={item._id} item={item} />)
+                                listOrderDetail.map((item) => <Item key={item._id} item={item} gotoComment={() => gotoComment(item)} />)
                             }
                         </View>
                     </View>
@@ -127,9 +138,11 @@ export default OrderDetail
 
 const styles = StyleSheet.create({
     listItem: {
-        display: 'flex',
         flexDirection: 'row',
         paddingVertical: 8,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         // borderBottomWidth: 0.5,
         // borderColor: 'rgba(0, 0, 0, 0.2)',
     },
@@ -139,7 +152,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     listItemName: {
-        flex: 5,
         paddingStart: 20,
     },
     TextlstName: {
@@ -147,6 +159,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '400',
         marginBottom: 5,
+        width: 150,
     },
     TextlstPrice: {
         fontWeight: 'bold',
@@ -158,16 +171,44 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
     },
+    btnReview: {
+        backgroundColor: 'black',
+        height: 30,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 5, margin: 5
+    },
+    textReview: {
+        color: 'white',
+        fontSize: 14,
+    },
 });
 
-const Item = ({ item }) => {
+const Item = ({ item, gotoComment }) => {
+    console.log("Itemmmmmmmmmmmmmm: ", item.isCmt);
     return (
         <View style={styles.listItem}>
-            <Image source={{ uri: item.product.listImage[0] }} style={styles.imgLst} />
-            <View style={styles.listItemName}>
-                <Text style={styles.TextlstName}>{item.product.name}</Text>
-                <Text style={styles.TextlstPrice}>$ {item.product.price} * {item.amount}</Text>
+            <View style={{ flexDirection: 'row' }}>
+                <Image source={{ uri: item.product.listImage[0] }} style={styles.imgLst} />
+                <View style={styles.listItemName}>
+                    <Text numberOfLines={1} style={styles.TextlstName}>{item.product.name}</Text>
+                    <Text style={styles.TextlstPrice}>$ {item.product.price} * {item.amount}</Text>
+                </View>
             </View>
+
+            <View >
+                {
+                    item.status == 'Delivered' && item.isCmt == false ?
+                        <TouchableOpacity style={styles.btnReview} onPress={() => gotoComment()}>
+                            <Text style={styles.textReview}>Review</Text>
+                        </TouchableOpacity> :
+                        <TouchableOpacity style={[styles.btnReview, { backgroundColor: '#CCCCCC' }]}>
+                            <Text style={styles.textReview}>Review</Text>
+                        </TouchableOpacity>
+                }
+            </View>
+
         </View>
 
     );

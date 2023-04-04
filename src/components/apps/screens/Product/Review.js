@@ -140,9 +140,9 @@ const Review = (props) => {
   const { item } = props.route.params;
   //console.log("Item: ", item);
   const { navigation } = props;
-  const {onGetCommentsByIdProduct} = useContext(AppContext);
+  const {onGetCommentsByIdProduct , listCmt, setListCmt} = useContext(AppContext);
   const { onGetUserById } = useContext(UserContext);
-  const [listCmt, setListCmt] = useState([]);
+  
   const [isLoading, setIsLoading] = useState(false);
   back(navigation);
 
@@ -163,7 +163,10 @@ const Review = (props) => {
         cmts[i].avatar = user.avatar;
         cmts[i].name = user.name;
         rate += cmts[i].rate/cmts.length;
-        cmts.rate = rate;
+        cmts.rate = rate.toFixed(1);
+      }
+      if(cmts.length === 0){
+        cmts.rate = 0;
       }
       setListCmt(cmts);
       setIsLoading(false);
