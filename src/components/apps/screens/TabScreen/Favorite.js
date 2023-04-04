@@ -55,17 +55,17 @@ const Favorite = (props) => {
       });
 
       //Cap nhat lai danh sach gio hang
-      if(listCart.length === 0) {
+      if (listCart.length === 0) {
         setListCart(listCartNew);
         setTotal(listCartNew.reduce((a, b) => a + b.totalPrice, 0));
         //Cap nhat tren database
         for (let i = 0; i < listFavorite.length; i++) {
           await onAddToCart(listFavorite[i].totalPrice, listFavorite[i].amount, user.cart, listFavorite[i].idProduct);
         }
-      }else{
+      } else {
         for (let i = 0; i < listFavorite.length; i++) {
           const itemToCart = listCart.find(item => item.idProduct === listFavorite[i].idProduct);
-          if(itemToCart) {
+          if (itemToCart) {
             const newListCart = listCart.map(async item => {
               if (item.idProduct === itemToCart.idProduct) {
                 item.amount = item.amount + 1;
@@ -75,10 +75,10 @@ const Favorite = (props) => {
               }
               return item;
             });
-            setListCart(newListCart); 
+            setListCart(newListCart);
             //Cap nhat tren database
             //await onUpdateOrderDetail(listFavorite[i]._id, listFavorite[i].totalPrice, listFavorite[i].amount, user.cart, listFavorite[i].idProduct);
-          }else{
+          } else {
             setListCart([...listCart, listFavorite[i]]);
             setTotal(total + listFavorite[i].totalPrice);
             //Them moi san pham vao gio hang
@@ -127,25 +127,25 @@ const Favorite = (props) => {
 
   const addOneToCart = async (it) => {
     try {
-      //Cap nhat idOder tu idFavorite sang idCart
-      const itemToCart = listFavorite.find(item => item._id === it._id);
-      const newListCart = listCart.map(async item => {
-        if (item.idProduct === itemToCart.idProduct) {
-          item.amount = item.amount + 1;
-          item.totalPrice = item.totalPrice + itemToCart.price;
-          setTotal(total + itemToCart.price);
-          await onUpdateOrderDetail(item._id, item.totalPrice, item.amount, user.cart, item.idProduct);
+      let check = false;
+      for (let i = 0; i < listCart.length; i++) {
+        if (listCart[i].idProduct === it.idProduct) {
+          listCart[i].amount = listCart[i].amount + 1;
+          listCart[i].totalPrice = listCart[i].totalPrice + it.price;
+          setTotal(total + it.price);
+          check = true;
+          await onUpdateOrderDetail(listCart[i]._id, listCart[i].totalPrice, listCart[i].amount, user.cart, listCart[i].idProduct);
         }
-        return item;
-      });
-      setListCart(newListCart);
-      setCountCart(countCart + 1);
-      //Xoa san pham khoi danh sach yeu thich
-      const listNew = listFavorite.filter(item => item._id !== it._id);
-      setListFavorite(listNew);
+      }
+      //console.log("Check: ", check);
 
-      //Cap nhat tren database
-      await deleteFavoriteItem(itemToCart._id);
+      if (check == false) {
+        await onAddToCart(it.totalPrice, 1, user.cart, it.idProduct);
+      }
+      //Xoa san pham khoi danh sach yeu thich va cap nhat lai database
+      await deleteFavoriteItem(it._id);
+      setCountFavorite(countFavorite + 1);
+      setCountCart(countCart + 1);
       //await onUpdateOrderDetail(itemToCart._id, itemToCart.totalPrice, itemToCart.amount, user.cart, itemToCart.idProduct);
     } catch (error) {
       console.log("Add 1 to cart fail: ", error);

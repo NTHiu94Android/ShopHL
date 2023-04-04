@@ -81,10 +81,12 @@ const Home = (props) => {
                 <View style={styles.container}>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, marginTop: 10, paddingHorizontal: 12 }}>
-                        <Image
-                            style={{ width: 24, height: 24 }}
-                            resizeMode='cover'
-                            source={require('../../../../assets/images/ic_search.png')} />
+                        <TouchableOpacity onPress={() =>navigation.navigate('SearchScreen')}>
+                            <Image
+                                style={{ width: 24, height: 24 }}
+                                resizeMode='cover'
+                                source={require('../../../../assets/images/ic_search.png')} />
+                        </TouchableOpacity>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: 150, height: 50 }}>
                             <Text style={{ color: 'black', fontWeight: '800', fontSize: 16 }}>Hoang</Text>
                             <Image

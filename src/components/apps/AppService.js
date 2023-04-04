@@ -70,12 +70,19 @@ export const get_order_details_by_idOrder = async (id) => {
 //------------------------------------IMAGE----------------------------------
 //Lay hinh anh theo idProduct
 export const get_image_by_idProduct = async (id) => {
-    return await CustomAxios().get("picture/api/get_picture_by_id/" + id);
+    return await CustomAxios().get("picture/get_pictures_by_idProduct/" + id);
 };
 
 //Lay hinh anh theo idProduct va Color
 export const get_image_by_idProduct_and_color = async (idProduct, color) => {
     return await CustomAxios().get("picture/api/get_pictures_by_color/" + idProduct + "/" + color);
+};
+
+
+//------------------------------------COMMENT----------------------------------
+//Lay comment theo idProduct
+export const get_comment_by_idProduct = async (idProduct) => {
+    return await CustomAxios().get("comment/api/get-comment-by-idProduct/" + idProduct);
 };
 
 

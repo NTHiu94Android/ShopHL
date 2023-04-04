@@ -43,5 +43,37 @@ export const reset_password = async (token, password, confirm_password) => {
     return response;
 };
 
+//Doi mat khau
+export const change_password = async (id, new_password, confirm_password) => {
+    const body = {
+        id: id,
+        new_password: new_password,
+        confirm_password: confirm_password,
+    }
+    const response = await CustomAxios().post('users/api/change-password', body);
+    return response;
+};
+
+//Cap nhat thong tin ca nhan
+export const update_profile = async (id, email, name, birthday, address, numberPhone, avatar) => {
+    const body = {
+        id: id,
+        name: name,
+        birthday: birthday,
+        address: address,
+        numberPhone: numberPhone,
+        avatar: avatar,
+        email: email
+    };
+    const response = await CustomAxios().post('users/api/update-profile', body);
+    return response;
+}
+
+//get user by id
+export const get_user_by_id = async (id) => {
+    const response = await CustomAxios().get('users/api/get-user-by-id/' + id);
+    return response;
+}
+
 
 

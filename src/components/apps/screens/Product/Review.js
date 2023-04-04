@@ -1,6 +1,10 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import back from '../../../backEvent/back';
+import { AppContext } from '../../AppContext';
+
+import ProgressDialog from 'react-native-progress-dialog';
+import { UserContext } from '../../../users/UserContext';
 
 const DataDemo = [
   {
@@ -120,21 +124,54 @@ const Item = ({ item, onPress }) => (
       }
     </View>
 
-    <Text numberOfLines={4} style={{ fontWeight: '400', fontSize: 14 }}>{item.body}</Text>
+    <Text numberOfLines={4} style={{ fontWeight: '400', fontSize: 14 }}>{item.content}</Text>
 
     <View style={styles.viewAvatar}>
       <Image
         style={styles.imgAvatarItem}
         resizeMode='cover'
-        source={require('../../../../assets/images/avataruser.png')} />
+        source={{uri: item.avatar}} />
     </View>
 
   </View>
 );
 
 const Review = (props) => {
+  const { item } = props.route.params;
+  //console.log("Item: ", item);
   const { navigation } = props;
+  const {onGetCommentsByIdProduct} = useContext(AppContext);
+  const { onGetUserById } = useContext(UserContext);
+  const [listCmt, setListCmt] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   back(navigation);
+
+  useEffect(() => {
+    getListCmt();
+  }, []);
+
+  //Lay danh sach cmt
+  const getListCmt = async () => {
+    try{
+      setIsLoading(true);
+      const cmts = await onGetCommentsByIdProduct(item._id);
+      console.log("Get list cmt: ", cmts);
+
+      let rate = 0;
+      for (let i = 0; i < cmts.length; i++) {
+        const user = await onGetUserById(cmts[i].idUser);
+        cmts[i].avatar = user.avatar;
+        cmts[i].name = user.name;
+        rate += cmts[i].rate/cmts.length;
+        cmts.rate = rate;
+      }
+      setListCmt(cmts);
+      setIsLoading(false);
+    }catch(error){
+      console.log("Get list cmt error: ", error);
+    }
+  };
+
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{ flex: 1, paddingTop: 50, backgroundColor: 'white', paddingHorizontal: 12 }}>
@@ -155,29 +192,34 @@ const Review = (props) => {
           <Image
             style={styles.imgProduct}
             resizeMode='cover'
-            source={require('../../../../assets/images/s23.jpg')} />
+            source={{uri: item.listImage[0]}} />
           <View style={{ marginLeft: 12, justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 18, fontWeight: '600' }}>Samsung S20</Text>
+            <Text style={{ fontSize: 18, fontWeight: '600' }}>{item.name}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image
                 style={styles.star}
                 resizeMode='cover'
                 source={require('../../../../assets/images/star.png')} />
-              <Text style={{ fontSize: 24, fontWeight: '700' }}>4.5</Text>
+              <Text style={{ fontSize: 24, fontWeight: '700' }}>{listCmt.rate}</Text>
             </View>
-            <Text style={{ fontSize: 14, fontWeight: '400' }}>10 Reviews</Text>
+            <Text style={{ fontSize: 14, fontWeight: '400' }}>{listCmt.length} Reviews  </Text>
           </View>
         </View>
 
         {
-          DataDemo.map((item) =>
+          listCmt.map((item) =>
             <Item key={item._id} item={item} />
           )
         }
 
 
       </View>
+      <ProgressDialog
+        visible={isLoading}
+        title="Đang tải dữ liệu"
+        message="Vui lòng đợi trong giây lát..." />
     </ScrollView>
+
 
   )
 }
