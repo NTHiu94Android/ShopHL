@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react'
 import {
-  addOrder, addToCart, delete_order_detail, getProducts, get_comment_by_idProduct, get_image_by_idProduct, get_image_by_idProduct_and_color, get_image_by_idProduct_and_idColor, get_order_by_id,
+  addOrder, addToCart, add_comment, delete_order_detail, getProducts, get_comment_by_idProduct, get_comment_by_idUser, get_comment_by_idUser_and_idProduct, get_image_by_idProduct, get_image_by_idProduct_and_color, get_image_by_idProduct_and_idColor, get_order_by_id,
   get_order_by_idUser, get_order_by_idUser_and_status,
   get_order_details_by_idOrder, get_product_by_id, update_order_detail
 } from './AppService';
@@ -22,6 +22,7 @@ export const AppContextProvider = (props) => {
   const [countOrderDetail, setCountOrderDetail] = useState(0);
   const [total, setTotal] = useState(0);
   const [ship, setShip] = useState(5);
+  const [listCmt, setListCmt] = useState([]);
 
   //-----------------------PRODUCT-------------------------
   //Lay danh sach san pham
@@ -216,6 +217,39 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  //Them binh luan
+  const onAddComment = async (content, rate, idUser, idProduct) => {
+    try {
+      const respone = await add_comment(content, rate, idUser, idProduct);
+      //console.log("Add comment: ", respone.data);
+      return respone.data;
+    } catch (error) {
+      console.log("Add comment error: ", error);
+    }
+  };
+
+  //Lay cmt theo id user
+  const onGetCommentByIdUser = async (idUser) => {
+    try {
+      const comments = await get_comment_by_idUser(idUser);
+      //console.log("OnGetCommentByIdUser Response: ", comments.data);
+      return comments.data;
+    } catch (error) {
+      console.log("OnGetCommentByIdUser Error: ", error);
+    }
+  };
+
+  //Lay cm theo id user va id product
+  const onGetCommentByIdUserAndIdProduct = async (idUser, idProduct) => {
+    try {
+      const comments = await get_comment_by_idUser_and_idProduct(idUser, idProduct);
+      //console.log("OnGetCommentByIdUserAndIdProduct Response: ", comments.data);
+      return comments.data;
+    } catch (error) {
+      console.log("OnGetCommentByIdUserAndIdProduct Error: ", error);
+    }
+  };
+
   return (
     <AppContext.Provider value={{
       onGetProducts, onAddToCart, onAddToFavorite, onAddOrder,
@@ -227,7 +261,7 @@ export const AppContextProvider = (props) => {
       listProcessing, setListProcessing, listDelivered, setListDelivered, listCanceled, setListCanceled,
       countOrderDetail, setCountOrderDetail,
       onGetImagesByIdProduct, onGetImageByIdProductAndColor, onGetProductsByName,
-      onGetCommentsByIdProduct
+      onGetCommentsByIdProduct, listCmt, setListCmt, onAddComment, onGetCommentByIdUser, onGetCommentByIdUserAndIdProduct
     }}>
       {children}
     </AppContext.Provider>

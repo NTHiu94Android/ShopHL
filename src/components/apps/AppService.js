@@ -85,6 +85,20 @@ export const get_comment_by_idProduct = async (idProduct) => {
     return await CustomAxios().get("comment/api/get-comment-by-idProduct/" + idProduct);
 };
 
+//Them comment
+export const add_comment = async (content, rate, idUser, idProduct ) => {
+    return await CustomAxios().post("comment/api/create-comment", { content, rate, idUser, idProduct  });
+};
+
+//LAy cmt theo id user
+export const get_comment_by_idUser = async (idUser) => {
+    return await CustomAxios().get("comment/api/get-comment-by-idUser/" + idUser);
+}
+
+//Lay cmt theo idUser va idProduct
+export const get_comment_by_idUser_and_idProduct = async (idUser, idProduct) => {
+    return await CustomAxios().get("comment/api/get-comment-by-idUser-and-idProduct/" + idUser + "/" + idProduct);
+};
 
 
 

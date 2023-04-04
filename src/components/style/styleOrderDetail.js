@@ -182,6 +182,7 @@ const styleOrderDetail = StyleSheet.create({
     marginTop: 15,
   },
   header: {
+    marginBottom: 12,
   },
   /*
    */
