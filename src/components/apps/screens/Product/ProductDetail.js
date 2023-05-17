@@ -5,16 +5,19 @@ import back from '../../../backEvent/back';
 import { UserContext } from '../../../users/UserContext';
 
 import Swiper from 'react-native-swiper';
+import ProgressDialog from 'react-native-progress-dialog';
 
 
 const ProductDetail = ({ route, navigation }) => {
   const { item } = route.params;
   const { onAddToCart, onAddToFavorite, setListCart,
-    setListFavorite, setCountCart, countCart,
-    total, setTotal, onGetImagesByIdProduct, onGetImageByIdProductAndColor
+    setListFavorite, setCountCart, countCart, listCmt, setListCmt,
+    total, setTotal, onGetImagesByIdProduct, onGetImageByIdProductAndColor, onGetCommentsByIdProduct
   } = useContext(AppContext);
   const { user } = useContext(UserContext);
   const [count, setCount] = useState(1);
+  const [listImage, setListImage] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   back(navigation);
 
@@ -65,52 +68,87 @@ const ProductDetail = ({ route, navigation }) => {
   };
 
   //Lay tat ca hinhanh cua san pham
-  // useEffect(() => {
-  //   const getImagesProduct = async () => {
-  //     const images = await onGetImagesByIdProduct(item._id);
-  //     console.log("Images: ", images);
-  //     //them list image vao item
-  //     item.listImage = images;
-  //   }
-  //   getImagesProduct();
-  // }, []);
+  useEffect(() => {
+    setIsLoading(false);
+    const getImagesProduct = async () => {
+      const images = await onGetImagesByIdProduct(item._id);
+      //console.log("Images: ", images);
+      let list = [];
+      for (let i = 0; i < images.length; i++) {
+        list.push(images[i].url);
+      }
+      setListImage(list);
+      setIsLoading(true);
+    }
+    getImagesProduct();
+  }, []);
 
-  //Lay anh theo mau
-  const getImageByColor = async (color) => {
-    try {
-      const image = await onGetImageByIdProductAndColor(item._id, color);
-      console.log("Image: ", image);
-      //set image vao item
-      item.listImage = [image];
-    } catch (error) {
-      console.log("Get image by color error: ", error);
+  useEffect(() => {
+    getListCmt();
+  }, []);
+
+  //Lay danh sach cmt
+  const getListCmt = async () => {
+    try{
+      const cmts = await onGetCommentsByIdProduct(item._id);
+      console.log("Get list cmt: ", cmts);
+
+      let rate = 0;
+      if(cmts.length > 0){
+        for (let i = 0; i < cmts.length; i++) {
+          rate += cmts[i].rate/cmts.length;
+          cmts.rate = rate.toFixed(1);
+        }
+      }else{
+        cmts.rate = 0;
+      }
+      setListCmt(cmts);
+    }catch(error){
+      console.log("Get list cmt error: ", error);
     }
   };
+
+  //Lay anh theo mau
+  // const getImageByColor = async (color) => {
+  //   try {
+  //     const image = await onGetImageByIdProductAndColor(item._id, color);
+  //     //console.log("Image: ", image);
+  //     //set image vao item
+  //     item.listImage = [image];
+  //   } catch (error) {
+  //     console.log("Get image by color error: ", error);
+  //   }
+  // };
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <ScrollView style={{ flex: 1, position: 'relative', marginBottom: 80 }}>
 
         {/* Box product */}
+
         <View style={{ flex: 4, justifyContent: 'center', alignItems: 'center' }}>
-          <Swiper
-            style={{ height: 350 }}
-            autoplayTimeout={5}
-            autoplay={true}
-            loop={true}
-            showsPagination={true}>
-            {item.listImage.map((image, index) => {
-              return (
-                <Image
-                  key={index}
-                  style={{ width: '100%', height: 350 }}
-                  resizeMode='stretch'
-                  source={{
-                    uri: image,
-                  }} />
-              )
-            })}
-          </Swiper>
+          {
+            isLoading ?
+              <Swiper
+                style={{ height: 350 }}
+                autoplayTimeout={3}
+                autoplay={true}
+                loop={true}
+                showsPagination={true}>
+                {listImage.map((image, index) => {
+                  return (
+                    <Image
+                      key={index}
+                      style={{ width: '100%', height: 350 }}
+                      resizeMode='stretch'
+                      source={{
+                        uri: image,
+                      }} />
+                  )
+                })}
+              </Swiper> : null
+          }
+
 
           <View style={{ position: "absolute", top: 20, left: 10 }}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -156,21 +194,25 @@ const ProductDetail = ({ route, navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{ flexDirection: 'row', marginTop: 6 }}>
+          <View style={{ flexDirection: 'row', marginTop: 6, alignItems: 'center' }}>
             <Image
               style={{ width: 20, height: 20 }}
               source={require('../../../../assets/images/ic_star.png')}
             />
-            <Text style={{ color: 'black', fontWeight: '700', fontSize: 18, lineHeight: 24.55, marginLeft: 25 }}>
-              {item.reviews}</Text>
-            <Text style={{ color: '#808080', fontWeight: '600', fontSize: 14, lineHeight: 24.55, marginLeft: 25 }}>
-              {item.status_review}
+            <Text style={{ color: 'black', fontWeight: '700', fontSize: 18 }}>
+              {listCmt.rate}
             </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Review', {item})}>
+              <Text style={{ color: '#808080', fontWeight: '600', fontSize: 14, marginLeft: 10, textDecorationLine: 'underline' }}>
+                See all reviews
+              </Text>
+            </TouchableOpacity>
           </View>
           <Text style={{ color: '#808080', fontWeight: '300', textAlign: 'justify', marginTop: 14, }}>
             {item.describer}
           </Text>
         </View>
+
 
       </ScrollView >
 
@@ -190,6 +232,11 @@ const ProductDetail = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
+
+      <ProgressDialog
+        visible={!isLoading}
+        title="Đang tải dữ liệu"
+        message="Vui lòng đợi trong giây lát..." />
     </View>
   )
 

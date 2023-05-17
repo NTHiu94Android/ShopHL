@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react'
-import { forgot_password, login, register, reset_password } from './UserService';
+import { change_password, forgot_password, get_user_by_id, login, register, reset_password, update_profile } from './UserService';
 
 export const UserContext = createContext();
 
@@ -47,8 +47,39 @@ export const UserContextProvider = (props) => {
     }
   };
 
+  //Doi mat khau
+  const onChangePassword = async (id, new_password, confirm_password) => {
+    try {
+      const response = await change_password(id, new_password, confirm_password);
+      return response;
+    } catch (error) {
+      console.log("Change password Error: ", error);
+    }
+  };
+
+  //Cap nhat thong tin ca nhan
+  const onUpdateProfile = async (id, email, name, birthday, address, numberPhone, avatar) => {
+    try {
+      const response = await update_profile(id, email, name, birthday, address, numberPhone, avatar);
+      return response;
+    } catch (error) {
+      console.log("Update profile Error: ", error);
+    }
+  };
+
+  //get user by id
+  const onGetUserById = async (id) => {
+    try {
+      const response = await get_user_by_id(id);
+      return response.data;
+    } catch (error) {
+      console.log("Get user by id Error: ", error);
+    }
+  };
+
+
   return (
-    <UserContext.Provider value={{ user, setUser, onLogin, onRegister, onForgotPassword, onResetPassword }}>
+    <UserContext.Provider value={{ user, setUser, onLogin, onRegister, onForgotPassword, onResetPassword, onChangePassword, onUpdateProfile, onGetUserById }}>
       {children}
     </UserContext.Provider>
   )

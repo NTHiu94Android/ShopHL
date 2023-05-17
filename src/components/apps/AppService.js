@@ -70,7 +70,7 @@ export const get_order_details_by_idOrder = async (id) => {
 //------------------------------------IMAGE----------------------------------
 //Lay hinh anh theo idProduct
 export const get_image_by_idProduct = async (id) => {
-    return await CustomAxios().get("picture/api/get_picture_by_id/" + id);
+    return await CustomAxios().get("picture/get_pictures_by_idProduct/" + id);
 };
 
 //Lay hinh anh theo idProduct va Color
@@ -78,6 +78,27 @@ export const get_image_by_idProduct_and_color = async (idProduct, color) => {
     return await CustomAxios().get("picture/api/get_pictures_by_color/" + idProduct + "/" + color);
 };
 
+
+//------------------------------------COMMENT----------------------------------
+//Lay comment theo idProduct
+export const get_comment_by_idProduct = async (idProduct) => {
+    return await CustomAxios().get("comment/api/get-comment-by-idProduct/" + idProduct);
+};
+
+//Them comment
+export const add_comment = async (content, rate, idUser, idProduct ) => {
+    return await CustomAxios().post("comment/api/create-comment", { content, rate, idUser, idProduct  });
+};
+
+//LAy cmt theo id user
+export const get_comment_by_idUser = async (idUser) => {
+    return await CustomAxios().get("comment/api/get-comment-by-idUser/" + idUser);
+}
+
+//Lay cmt theo idUser va idProduct
+export const get_comment_by_idUser_and_idProduct = async (idUser, idProduct) => {
+    return await CustomAxios().get("comment/api/get-comment-by-idUser-and-idProduct/" + idUser + "/" + idProduct);
+};
 
 
 

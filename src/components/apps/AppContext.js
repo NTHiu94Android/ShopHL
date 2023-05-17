@@ -1,16 +1,16 @@
 import React, { createContext, useContext, useState } from 'react'
-import { 
-  addOrder, addToCart, delete_order_detail, getProducts, get_image_by_idProduct, get_image_by_idProduct_and_color, get_image_by_idProduct_and_idColor, get_order_by_id, 
-  get_order_by_idUser, get_order_by_idUser_and_status, 
-  get_order_details_by_idOrder, get_product_by_id, update_order_detail 
+import {
+  addOrder, addToCart, add_comment, delete_order_detail, getProducts, get_comment_by_idProduct, get_comment_by_idUser, get_comment_by_idUser_and_idProduct, get_image_by_idProduct, get_image_by_idProduct_and_color, get_image_by_idProduct_and_idColor, get_order_by_id,
+  get_order_by_idUser, get_order_by_idUser_and_status,
+  get_order_details_by_idOrder, get_product_by_id, update_order_detail
 } from './AppService';
 import { UserContext } from '../users/UserContext';
 
 export const AppContext = createContext();
 
-export const AppContextProvider = (props) => { 
+export const AppContextProvider = (props) => {
   const { children } = props;
-  const {user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [listCart, setListCart] = useState([]);
   const [listFavorite, setListFavorite] = useState([]);
   const [listOrder, setListOrder] = useState([]);
@@ -22,6 +22,7 @@ export const AppContextProvider = (props) => {
   const [countOrderDetail, setCountOrderDetail] = useState(0);
   const [total, setTotal] = useState(0);
   const [ship, setShip] = useState(5);
+  const [listCmt, setListCmt] = useState([]);
 
   //-----------------------PRODUCT-------------------------
   //Lay danh sach san pham
@@ -55,6 +56,21 @@ export const AppContextProvider = (props) => {
       return productsByBrand;
     } catch (error) {
       console.log("OnGetProductsByBrand Error: ", error);
+    }
+  };
+
+  //Lay danh sach san pham theo ten
+  const onGetProductsByName = async (name) => {
+    try {
+      const products = await getProducts();
+      //Tim san pham co ten chua chuoi name
+      const productsByName = products.data.filter((product) =>
+        product.name.toLowerCase().includes(name.toLowerCase())
+      );
+      //console.log("OnGetProductsByName Response: ", productsByName);
+      return productsByName;
+    } catch (error) {
+      console.log("OnGetProductsByName Error: ", error);
     }
   };
 
@@ -107,8 +123,8 @@ export const AppContextProvider = (props) => {
     }
   };
 
-   //Lay danh sach chi tiet don hang theo idOrder
-   const onGetOrderDetailsByIdOrder = async (idOrder) => {
+  //Lay danh sach chi tiet don hang theo idOrder
+  const onGetOrderDetailsByIdOrder = async (idOrder) => {
     try {
       const orderDetail = await get_order_details_by_idOrder(idOrder);
       //console.log("OnGetOrderDetailByIdOrder Response: ", orderDetail.data);
@@ -188,6 +204,52 @@ export const AppContextProvider = (props) => {
     }
   };
 
+
+  //------------------------------COMMENT------------------------------
+  //Lay danh sach binh luan theo idProduct
+  const onGetCommentsByIdProduct = async (idProduct) => {
+    try {
+      const comments = await get_comment_by_idProduct(idProduct);
+      //console.log("OnGetCommentsByIdProduct Response: ", comments.data);
+      return comments.data;
+    } catch (error) {
+      console.log("OnGetCommentsByIdProduct Error: ", error);
+    }
+  };
+
+  //Them binh luan
+  const onAddComment = async (content, rate, idUser, idProduct) => {
+    try {
+      const respone = await add_comment(content, rate, idUser, idProduct);
+      //console.log("Add comment: ", respone.data);
+      return respone.data;
+    } catch (error) {
+      console.log("Add comment error: ", error);
+    }
+  };
+
+  //Lay cmt theo id user
+  const onGetCommentByIdUser = async (idUser) => {
+    try {
+      const comments = await get_comment_by_idUser(idUser);
+      //console.log("OnGetCommentByIdUser Response: ", comments.data);
+      return comments.data;
+    } catch (error) {
+      console.log("OnGetCommentByIdUser Error: ", error);
+    }
+  };
+
+  //Lay cm theo id user va id product
+  const onGetCommentByIdUserAndIdProduct = async (idUser, idProduct) => {
+    try {
+      const comments = await get_comment_by_idUser_and_idProduct(idUser, idProduct);
+      //console.log("OnGetCommentByIdUserAndIdProduct Response: ", comments.data);
+      return comments.data;
+    } catch (error) {
+      console.log("OnGetCommentByIdUserAndIdProduct Error: ", error);
+    }
+  };
+
   return (
     <AppContext.Provider value={{
       onGetProducts, onAddToCart, onAddToFavorite, onAddOrder,
@@ -198,7 +260,8 @@ export const AppContextProvider = (props) => {
       total, setTotal, ship, setShip, listOrder, setListOrder, onGetOrderByIdUserAndStatus,
       listProcessing, setListProcessing, listDelivered, setListDelivered, listCanceled, setListCanceled,
       countOrderDetail, setCountOrderDetail,
-      onGetImagesByIdProduct, onGetImageByIdProductAndColor
+      onGetImagesByIdProduct, onGetImageByIdProductAndColor, onGetProductsByName,
+      onGetCommentsByIdProduct, listCmt, setListCmt, onAddComment, onGetCommentByIdUser, onGetCommentByIdUserAndIdProduct
     }}>
       {children}
     </AppContext.Provider>

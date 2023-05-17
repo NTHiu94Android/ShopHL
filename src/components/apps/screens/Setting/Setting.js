@@ -7,9 +7,13 @@ import back from '../../../backEvent/back';
 
 const Setting = (props) => {
   const { navigation } = props;
-  const { setUser } = useContext(UserContext);
+  const { setUser, user } = useContext(UserContext);
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  const handleEditPassword = () => {
+    navigation.navigate('EditPassword');
+  };
 
   back(navigation);
   return (
@@ -42,19 +46,22 @@ const Setting = (props) => {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
               <Text style={styleSetting.txtPersonalInformation}>Personal Information</Text>
               <View>
-                <Image
-                  style={styleSetting.icEdit1}
-                  source={require('../../../../assets/images/edit.png')}
-                  resizeMode="cover"></Image>
+                <TouchableOpacity onPress={() => navigation.navigate('UpdateProfile')}>
+                  <Image
+                    style={styleSetting.icEdit1}
+                    source={require('../../../../assets/images/edit.png')}
+                    resizeMode="cover">
+                  </Image>
+                </TouchableOpacity>
               </View>
             </View>
 
             <View>
               <Text style={[styleSetting.txtName, { marginTop: 15 }]}>Name:</Text>
-              <Text style={styleSetting.txtNameUser}>Phạm Quốc Tín</Text>
+              <Text style={styleSetting.txtNameUser}>{user.name}</Text>
 
               <Text style={[styleSetting.txtName, { marginTop: 15 }]}>Email</Text>
-              <Text style={styleSetting.txtNameUser}>tinphan99@gmail.com</Text>
+              <Text style={styleSetting.txtNameUser}>{user.email}</Text>
             </View>
 
           </View>
@@ -64,10 +71,13 @@ const Setting = (props) => {
             <View style={styleSetting.viewPassword}>
               <Text style={styleSetting.txtPersonalInformation}>Password</Text>
               <View>
-                <Image
-                  style={styleSetting.icEdit1}
-                  source={require('../../../../assets/images/edit.png')}
-                  resizeMode="cover"></Image>
+                <TouchableOpacity onPress={() => handleEditPassword()}>
+                  <Image
+                    style={styleSetting.icEdit1}
+                    source={require('../../../../assets/images/edit.png')}
+                    resizeMode="cover">
+                  </Image>
+                </TouchableOpacity>
               </View>
             </View>
             <Text style={styleSetting.txtName}>Name:</Text>
@@ -91,7 +101,7 @@ const Setting = (props) => {
 
           {/* Help Center */}
           <View style={styleSetting.viewPersonalInformation}>
-            <Text style={[styleSetting.txtPersonalInformation, {marginBottom: 10}]}>Help Center</Text>
+            <Text style={[styleSetting.txtPersonalInformation, { marginBottom: 10 }]}>Help Center</Text>
 
             <TouchableOpacity style={styleSetting.btnFAQ}>
               <Text style={styleSetting.txtFAQ}>FAQ</Text>

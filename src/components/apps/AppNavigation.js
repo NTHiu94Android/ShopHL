@@ -19,6 +19,9 @@ import Review from './screens/Product/Review';
 import OrderStack from './screens/Order/OrderStack';
 import Setting from './screens/Setting/Setting';
 import Shipping from './screens/Shipping/Shipping';
+import EditPassword from './screens/Setting/EditPassword';
+import UpdateProfile from './screens/Setting/UpdateProfile';
+import Comment from './screens/Product/Comment';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
@@ -99,6 +102,10 @@ const AppNavigation = () => {
                 <Stack.Screen options={{ headerShown: false }} name='OrderStack' component={OrderStack} />
                 <Stack.Screen options={{ headerShown: false }} name='Setting' component={Setting} />
                 <Stack.Screen options={{ headerShown: false }} name='Shipping' component={Shipping} />
+                <Stack.Screen options={{ headerShown: false }} name='EditPassword' component={EditPassword} />
+                <Stack.Screen options={{ headerShown: false }} name='UpdateProfile' component={UpdateProfile} />
+                <Stack.Screen options={{ headerShown: false }} name='Comment' component={Comment} />
+
             </Stack.Navigator>
         </NavigationContainer>
     )
