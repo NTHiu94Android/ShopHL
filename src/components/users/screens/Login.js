@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput, ToastAndroid, ScrollView, Alert } from 'react-native'
 import React, { useContext, useState } from 'react';
 
-import * as Google from 'expo-google-app-auth';
+//import * as Google from 'expo-google-app-auth';
 
 import { UserContext } from '../UserContext';
 
@@ -53,27 +53,27 @@ const Login = (props) => {
   };
 
   const signInWithGoogleAsync = async() => {
-    try {
-      const config = {
-        //iosClientId: '<YOUR_IOS_CLIENT_ID>',
-        androidClientId: '991338502956-dj37d9skmkb13pl0pcjb3aib9oenqgfe.apps.googleusercontent.com',
-        //iosStandaloneAppClientId: '<YOUR_IOS_CLIENT_ID>',
-        //androidStandaloneAppClientId: '<YOUR_ANDROID_CLIENT_ID>',
-        scopes: ['profile', 'email'],
-      };
+    // try {
+    //   const config = {
+    //     //iosClientId: '<YOUR_IOS_CLIENT_ID>',
+    //     androidClientId: '991338502956-dj37d9skmkb13pl0pcjb3aib9oenqgfe.apps.googleusercontent.com',
+    //     //iosStandaloneAppClientId: '<YOUR_IOS_CLIENT_ID>',
+    //     //androidStandaloneAppClientId: '<YOUR_ANDROID_CLIENT_ID>',
+    //     scopes: ['profile', 'email'],
+    //   };
 
-      const { type, accessToken, user } = await Google.logInAsync(config);
+    //   const { type, accessToken, user } = await Google.logInAsync(config);
 
-      if (type === 'success') {
-        // Đăng nhập thành công, lấy được accessToken và user
-        console.log(accessToken, user);
-      } else {
-        // Đăng nhập không thành công
-        console.log('Đăng nhập không thành công');
-      }
-    } catch (e) {
-      console.log('Lỗi:', e.message);
-    }
+    //   if (type === 'success') {
+    //     // Đăng nhập thành công, lấy được accessToken và user
+    //     console.log(accessToken, user);
+    //   } else {
+    //     // Đăng nhập không thành công
+    //     console.log('Đăng nhập không thành công');
+    //   }
+    // } catch (e) {
+    //   console.log('Lỗi:', e.message);
+    // }
   }
 
 
