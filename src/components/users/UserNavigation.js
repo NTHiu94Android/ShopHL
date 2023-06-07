@@ -31,6 +31,7 @@ const UserNavigation = () => {
 
         return () => backHandler.remove();
     }, [backPressCount]);
+    
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 //import { FlatList, Image, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, Button, View, alert } from 'react-native'
 //import messaging from '@react-native-firebase/messaging';
 import Started from './src/components/splash/Started';

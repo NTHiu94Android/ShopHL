@@ -23,7 +23,21 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "config": {
+        "googleSignIn": {
+          "apiKey": "AIzaSyCbSy4BNX0oU0sMbTkHLiAn1AyzbT_8Ri4",
+          "certificateHash": "84:F7:D3:F6:C5:E4:33:E5:80:B9:B2:BB:17:34:9F:90:FC:2F:00:70",
+          "config": {
+            "clientId": "991338502956-dj37d9skmkb13pl0pcjb3aib9oenqgfe.apps.googleusercontent.com",
+            "redirectUrl": "http://localhost:19006"
+          }
+        }
+      },
+      "permissions": [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

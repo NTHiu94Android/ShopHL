@@ -1,10 +1,12 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useState } from 'react';
+import { UserContext } from '../users/UserContext';
 import {
-  addOrder, addToCart, add_comment, delete_order_detail, getProducts, get_comment_by_idProduct, get_comment_by_idUser, get_comment_by_idUser_and_idProduct, get_image_by_idProduct, get_image_by_idProduct_and_color, get_image_by_idProduct_and_idColor, get_order_by_id,
+  addOrder, addToCart, add_comment, delete_order_detail, getProducts, 
+  get_comment_by_idProduct, get_comment_by_idUser, get_comment_by_idUser_and_idProduct, 
+  get_image_by_idProduct, get_image_by_idProduct_and_color, get_order_by_id,
   get_order_by_idUser, get_order_by_idUser_and_status,
   get_order_details_by_idOrder, get_product_by_id, update_order_detail
 } from './AppService';
-import { UserContext } from '../users/UserContext';
 
 export const AppContext = createContext();
 

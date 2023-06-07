@@ -1,5 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput, ToastAndroid, ScrollView } from 'react-native'
-import React, { useContext, useState } from 'react'
+import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput, ToastAndroid, ScrollView, Alert } from 'react-native'
+import React, { useContext, useState } from 'react';
+
+import * as Google from 'expo-google-app-auth';
 
 import { UserContext } from '../UserContext';
 
@@ -9,24 +11,73 @@ const Login = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+
   const handleLogin = async () => {
     if (!email || !password) {
-      ToastAndroid.show('Please fill all the fields!', ToastAndroid.SHORT);
-      return;
+      //neu tren android
+      if (Platform.OS === 'android') {
+        ToastAndroid.showWithGravityAndOffset(
+          'Please fill all the fields!',
+          ToastAndroid.SHORT,
+          ToastAndroid.BOTTOM,
+          25,
+          50,
+        );
+        return;
+      } else {
+        //neu tren ios
+        Alert.alert('Please fill all the fields!');
+        return;
+      }
     };
     const res = await onLogin(email, password);
     if (res.data) {
       setUser(res.data);
     } else {
-      ToastAndroid.show('Login fail!', ToastAndroid.SHORT);
+      //neu tren android
+      if (Platform.OS === 'android') {
+        ToastAndroid.showWithGravityAndOffset(
+          'Login fail!',
+          ToastAndroid.SHORT,
+          ToastAndroid.BOTTOM,
+          25,
+          50,
+        );
+        return;
+      } else {
+        //neu tren ios
+        Alert.alert('Login fail!');
+        return;
+      }
     }
   };
 
-  
-  // const getUser = () => {
-  //   const us = { username: "admin", password: "123" }
-  //   setUser(us);
-  // }
+  const signInWithGoogleAsync = async() => {
+    try {
+      const config = {
+        //iosClientId: '<YOUR_IOS_CLIENT_ID>',
+        androidClientId: '991338502956-dj37d9skmkb13pl0pcjb3aib9oenqgfe.apps.googleusercontent.com',
+        //iosStandaloneAppClientId: '<YOUR_IOS_CLIENT_ID>',
+        //androidStandaloneAppClientId: '<YOUR_ANDROID_CLIENT_ID>',
+        scopes: ['profile', 'email'],
+      };
+
+      const { type, accessToken, user } = await Google.logInAsync(config);
+
+      if (type === 'success') {
+        // Đăng nhập thành công, lấy được accessToken và user
+        console.log(accessToken, user);
+      } else {
+        // Đăng nhập không thành công
+        console.log('Đăng nhập không thành công');
+      }
+    } catch (e) {
+      console.log('Lỗi:', e.message);
+    }
+  }
+
+
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{ flex: 1, backgroundColor: 'white', marginTop: 50, paddingHorizontal: 50 }}>
@@ -59,6 +110,10 @@ const Login = (props) => {
 
           <TouchableOpacity style={styles.btn} onPress={() => handleLogin()}>
             <Text style={{ color: '#ffffff', textAlign: 'center', fontWeight: 'bold' }} >Log In</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.btn} onPress={() => signInWithGoogleAsync()}>
+            <Text style={{ color: '#ffffff', textAlign: 'center', fontWeight: 'bold' }} >Log In By Google</Text>
           </TouchableOpacity>
 
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
