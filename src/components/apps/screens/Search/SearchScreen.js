@@ -47,7 +47,7 @@ const SearchScreen = (props) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white', padding: 12 }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, marginTop: 48, marginBottom: 12 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, marginTop: 48 }}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             style={styles.iconTopBar}

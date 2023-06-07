@@ -11,8 +11,8 @@ import ProgressDialog from 'react-native-progress-dialog';
 const ProductDetail = ({ route, navigation }) => {
   const { item } = route.params;
   const { onAddToCart, onAddToFavorite, setListCart,
-    setListFavorite, setCountCart, countCart, listCmt, setListCmt,
-    total, setTotal, onGetImagesByIdProduct, onGetImageByIdProductAndColor, onGetCommentsByIdProduct
+    setListFavorite, setCountCart, countCart,
+    total, setTotal, onGetImagesByIdProduct, onGetImageByIdProductAndColor
   } = useContext(AppContext);
   const { user } = useContext(UserContext);
   const [count, setCount] = useState(1);
@@ -83,30 +83,6 @@ const ProductDetail = ({ route, navigation }) => {
     getImagesProduct();
   }, []);
 
-  useEffect(() => {
-    getListCmt();
-  }, []);
-
-  //Lay danh sach cmt
-  const getListCmt = async () => {
-    try{
-      const cmts = await onGetCommentsByIdProduct(item._id);
-      console.log("Get list cmt: ", cmts);
-
-      let rate = 0;
-      if(cmts.length > 0){
-        for (let i = 0; i < cmts.length; i++) {
-          rate += cmts[i].rate/cmts.length;
-          cmts.rate = rate.toFixed(1);
-        }
-      }else{
-        cmts.rate = 0;
-      }
-      setListCmt(cmts);
-    }catch(error){
-      console.log("Get list cmt error: ", error);
-    }
-  };
 
   //Lay anh theo mau
   // const getImageByColor = async (color) => {
@@ -200,7 +176,7 @@ const ProductDetail = ({ route, navigation }) => {
               source={require('../../../../assets/images/ic_star.png')}
             />
             <Text style={{ color: 'black', fontWeight: '700', fontSize: 18 }}>
-              {listCmt.rate}
+              {item.reviews} 4.5 
             </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Review', {item})}>
               <Text style={{ color: '#808080', fontWeight: '600', fontSize: 14, marginLeft: 10, textDecorationLine: 'underline' }}>
